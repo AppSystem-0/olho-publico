@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Olho Público — dinheiro público municipal, aberto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#0f172a;--ink2:#334155;--mute:#64748b;--line:#e2e8f0;--soft:#f1f5f9;
+--acc:#059669;--acc-d:#047857;--acc-s:#ecfdf5;--red:#dc2626;--red-s:#fef2f2;--amb:#d97706;--amb-s:#fffbeb;--blue:#2563eb;--r:16px;--sh:0 1px 2px rgba(15,23,42,.04),0 4px 16px rgba(15,23,42,.05)}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1120;--card:#111827;--ink:#f1f5f9;--ink2:#cbd5e1;--mute:#94a3b8;--line:#1f2937;--soft:#1e293b;--acc:#34d399;--acc-d:#10b981;--acc-s:#052e22;--red:#f87171;--red-s:#2a1215;--amb:#fbbf24;--amb-s:#2a1f08;--sh:none}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font:14px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+button,select,input,textarea{font:inherit;color:inherit}
+.wrap{max-width:1180px;margin:auto;padding:0 18px}
+.topbar{background:#0f172a;color:#94a3b8;font-size:12px;padding:7px 0}
+.topbar .wrap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;margin-right:6px;box-shadow:0 0 0 3px rgba(52,211,153,.2)}
+.topbar b{color:#fff;font-weight:600}
+nav{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+nav .wrap{display:flex;align-items:center;gap:14px;height:62px}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo .ic{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#047857,#10b981 60%,#14b8a6);display:grid;place-items:center;color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.3)}
+.logo b{font-size:17px;font-weight:800;letter-spacing:-.02em}.logo b span{color:var(--acc)}
+.logo small{display:block;font-size:11px;color:var(--mute);margin-top:-2px}
+.search{flex:1;position:relative;max-width:520px;margin-left:auto}
+.search input{width:100%;padding:9px 12px 9px 36px;border:1px solid var(--line);border-radius:10px;background:var(--soft);outline:none}
+.search input:focus{border-color:var(--acc);background:var(--card);box-shadow:0 0 0 3px var(--acc-s)}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--mute)}
+.sel{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);padding:8px 12px;border-radius:10px;font-weight:600;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--soft)}.btn.pri{background:var(--acc-d);border-color:var(--acc-d);color:#fff}.btn.pri:hover{filter:brightness(1.08)}
+.btn.amb{background:var(--amb);border-color:var(--amb);color:#fff}
+.hero{margin:20px 0;border-radius:20px;padding:26px;color:#fff;background:radial-gradient(120% 140% at 100% 0%,#065f46 0%,#0f172a 55%);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-60px;bottom:-80px;width:280px;height:280px;border-radius:50%;border:40px solid rgba(255,255,255,.04)}
+.pill{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 10px;border-radius:99px;background:rgba(52,211,153,.15);color:#6ee7b7;border:1px solid rgba(52,211,153,.3)}
+.hero h1{font-size:clamp(22px,4vw,30px);line-height:1.2;margin:12px 0 6px;letter-spacing:-.02em;font-weight:800}
+.hero p{color:#cbd5e1;margin:0;max-width:680px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+.kpi{padding:16px 18px}.kpi .h{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.kpi .ico{width:32px;height:32px;border-radius:9px;display:grid;place-items:center}
+.kpi .v{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-top:6px}
+.kpi .s{font-size:12px;color:var(--mute);margin-top:2px}
+.kpi.warn{border-color:#fcd34d;background:linear-gradient(var(--amb-s),var(--card))}.kpi.warn .v{color:var(--amb)}
+.tabs{display:flex;gap:4px;overflow-x:auto;padding:5px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:16px;scrollbar-width:none}
+.tabs button{border:0;background:none;padding:9px 14px;border-radius:10px;font-weight:600;color:var(--mute);cursor:pointer;white-space:nowrap;display:flex;gap:7px;align-items:center}
+.tabs button.on{background:var(--acc-s);color:var(--acc-d)}
+.badge{font-size:11px;padding:1px 7px;border-radius:99px;background:var(--soft);color:var(--ink2);font-weight:700}
+.tabs .on .badge{background:var(--acc);color:#fff}
+.panel{display:none}.panel.on{display:block}
+.g2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:14px}@media(max-width:860px){.g2{grid-template-columns:1fr}}
+.box{padding:18px}.box h3{margin:0;font-size:14.5px;font-weight:700}.box .d{color:var(--mute);font-size:12.5px;margin:2px 0 14px}
+.chart{display:flex;align-items:flex-end;gap:5px;height:210px;border-bottom:1px solid var(--line);padding-bottom:2px}
+.mc{flex:1;height:100%;display:flex;align-items:flex-end;gap:2px;position:relative;cursor:default}
+.mc i{flex:1;border-radius:5px 5px 0 0;min-height:2px;transition:filter .15s}.mc:hover i{filter:brightness(1.15)}
+.mlab{display:flex;gap:5px;margin-top:6px}.mlab span{flex:1;text-align:center;font-size:11px;color:var(--mute)}
+.leg{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-top:10px}.leg b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.donut{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.donut svg{flex-shrink:0}.dl{flex:1;min-width:160px}.dl div{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;padding:4px 0;border-bottom:1px dashed var(--line)}
+.dl span{display:flex;align-items:center;gap:7px;overflow:hidden}.dl span em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dl b{font-weight:700;white-space:nowrap}
+.sw{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.hb{margin:10px 0}.hb .t{display:flex;justify-content:space-between;gap:10px;font-size:12.5px}.hb .t span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink2)}.hb .t b{white-space:nowrap}
+.trk{height:7px;background:var(--soft);border-radius:4px;margin-top:4px;overflow:hidden}.trk i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--acc-d),var(--acc))}
+.info{display:flex;gap:12px;padding:14px 16px;border-radius:14px;margin-bottom:14px;font-size:13px}
+.info.g{background:var(--acc-s);border:1px solid rgba(16,185,129,.3)}.info.a{background:var(--amb-s);border:1px solid rgba(217,119,6,.3)}
+.info .ib{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;flex-shrink:0}
+.info h4{margin:0 0 2px;font-size:13.5px}.info p{margin:0;color:var(--ink2)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.alerts{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.al{padding:16px;display:flex;flex-direction:column;gap:9px;border-left:4px solid var(--amb)}
+.al.alta{border-left-color:var(--red)}.al.baixa{border-left-color:var(--mute)}
+.al .top{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.04em;background:var(--soft);color:var(--ink2)}
+.chip.alta{background:var(--red-s);color:var(--red)}.chip.media{background:var(--amb-s);color:var(--amb)}
+.al h4{margin:0;font-size:14px;line-height:1.35}.al .who{font-size:12px;color:var(--mute);font-weight:600}
+.al .ex{font-size:12.5px;color:var(--ink2);background:var(--soft);padding:10px 12px;border-radius:10px;margin:0}
+.al .emp{font-size:11.5px;color:var(--mute);font-family:ui-monospace,monospace;word-break:break-word}
+.al .act{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+.tbl{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);font-weight:600;text-align:left;padding:10px 12px;background:var(--soft);white-space:nowrap}
+td{padding:11px 12px;border-top:1px solid var(--line);vertical-align:middle}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.cl{cursor:pointer}tr.cl:hover td{background:var(--soft)}
+.rk{width:24px;height:24px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:11px;font-weight:700}
+.nm{font-weight:600}.doc{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--mute)}
+.pct{font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--acc-s);color:var(--acc-d)}
+.tfoot{padding:10px 14px;font-size:12px;color:var(--mute);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:14px;z-index:50}
+.modal.on{display:flex}.mbox{background:var(--card);border-radius:20px;width:100%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.35)}
+.mh{background:#0f172a;color:#fff;padding:16px 18px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.mh h3{margin:0;font-size:16px}.mh p{margin:2px 0 0;color:#94a3b8;font-size:12px}
+.mh button{background:none;border:0;color:#94a3b8;font-size:22px;cursor:pointer;line-height:1}
+.mb{padding:18px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.steps div{padding:10px;border-radius:12px;background:var(--soft);text-align:center}.steps b{display:block;font-size:16px;font-weight:800}.steps span{font-size:11px;color:var(--mute)}
+.steps .on{background:var(--acc-s)}.steps .on b{color:var(--acc-d)}
+textarea{width:100%;min-height:220px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);font-family:ui-monospace,monospace;font-size:11.5px;line-height:1.55;resize:vertical}
+.mf{padding:12px 18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;background:var(--soft)}
+.note{font-size:12px;background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe;padding:10px 12px;border-radius:10px}
+@media (prefers-color-scheme:dark){.note{background:#0c1a33;color:#bfdbfe;border-color:#1e3a8a}}
+footer{background:#0f172a;color:#94a3b8;margin-top:40px;padding:30px 0;font-size:12.5px}
+footer .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}footer h5{color:#fff;margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+footer a{color:#94a3b8;text-decoration:none;display:block;padding:2px 0}footer a:hover{color:#34d399}footer p{margin:0}
+.toast{position:fixed;bottom:18px;left:50%;transform:translate(-50%,20px);opacity:0;background:#0f172a;color:#fff;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:500;transition:.25s;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.3);pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.vazio{padding:50px 20px;text-align:center;color:var(--mute)}
+@media(max-width:640px){.search{display:none}.hide-m{display:none}.hero{padding:20px}nav .wrap{height:58px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap"><span><span class="dot"></span>Iniciativa cidadã independente · dados abertos oficiais</span><span>Fonte: <b>TCE-SP / Audesp</b> · <span id="atual">—</span></span></div></div>
+<nav><div class="wrap">
+  <div class="logo"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M9 10h3a1 1 0 0 1 0 2h-2a1 1 0 0 0 0 2h3"/></svg></div>
+    <div><b>Olho<span>Público</span></b><small>Cada real sob o olhar do cidadão</small></div></div>
+  <div class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="busca-global" placeholder="Buscar fornecedor ou CNPJ…"></div>
+  <select id="cidade" class="sel" aria-label="Cidade"></select><select id="ano" class="sel" aria-label="Ano"></select>
+</div></nav>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="pill">● Auditoria cívica contínua</span>
+    <h1 id="titulo">Para onde vai o dinheiro público?</h1>
+    <p>Receitas, empenhos e pagamentos extraídos automaticamente do Tribunal de Contas do Estado. Veja quem recebe, quanto e quando, e use os alertas como ponto de partida para fiscalizar.</p>
+  </section>
+  <div id="app"><div class="vazio">Carregando…</div></div>
+</main>
+
+<footer><div class="wrap">
+  <div><h5>Olho Público</h5><p>Projeto aberto e apartidário de controle social. Os alertas são <b style="color:#fff">indícios automáticos, não acusações</b>: cada um explica o critério usado e as explicações possíveis que não envolvem irregularidade.</p></div>
+  <div><h5>Fontes oficiais</h5><a href="https://transparencia.tce.sp.gov.br/" target="_blank" rel="noopener">→ TCE-SP · Portal da Transparência Municipal</a><a href="https://pncp.gov.br" target="_blank" rel="noopener">→ Portal Nacional de Contratações Públicas</a><a href="https://portaldatransparencia.gov.br" target="_blank" rel="noopener">→ Portal da Transparência federal</a></div>
+  <div><h5>Base legal</h5><p>Lei de Acesso à Informação (12.527/2011), Lei de Responsabilidade Fiscal (LC 101/2000), Lei da Transparência (LC 131/2009). CPFs mascarados conforme a LGPD.</p></div>
+</div></footer>
+
+<div class="modal" id="modal"><div class="mbox"><div class="mh"><div><h3 id="m-t"></h3><p id="m-s"></p></div><button onclick="fechar()" aria-label="Fechar">×</button></div><div class="mb" id="m-b"></div><div class="mf" id="m-f"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const curto=v=>{const a=Math.abs(v),f=(n,d)=>n.toLocaleString('pt-BR',{maximumFractionDigits:d});return a>=1e9?'R$ '+f(v/1e9,2)+' bi':a>=1e6?'R$ '+f(v/1e6,1)+' mi':a>=1e3?'R$ '+f(v/1e3,0)+' mil':brl(v)};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const TIPOS={fracionamento:'Possível fracionamento',concentracao:'Concentração',anulacoes:'Anulações',pico_dezembro:'Pico de fim de ano',fornecedor_pontual:'Fornecedor pontual'};
+const CORES=['#059669','#2563eb','#d97706','#7c3aed','#db2777','#0891b2','#65a30d','#94a3b8'];
+let D=null,A=null,aba='geral';
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._);t._=setTimeout(()=>t.classList.remove('on'),2600)}
+function copiar(txt,msg){(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).catch(()=>{const a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}).finally(()=>toast(msg))}
+function baixarCSV(nome,linhas){const csv='﻿'+linhas.map(l=>l.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=nome;a.click();toast('Arquivo '+nome+' baixado')}
+
+async function carregarIndice(){return window.DADOS?[{slug:DADOS.slug,nome:DADOS.nome}]:fetch('dados/cidades.json').then(r=>r.json())}
+async function carregarCidade(slug){return window.DADOS||fetch(`dados/${slug}.json`).then(r=>r.json())}
+
+async function init(){
+  try{
+    const cs=await carregarIndice(); if(!cs.length)throw 0;
+    $('#cidade').innerHTML=cs.map(c=>`<option value="${esc(c.slug)}">${esc(c.nome)}</option>`).join('');
+    const q=new URLSearchParams(location.search).get('cidade'); if(q&&cs.some(c=>c.slug===q))$('#cidade').value=q;
+    $('#cidade').onchange=trocarCidade;$('#ano').onchange=()=>{A=D.anos[$('#ano').value];render()};
+    $('#busca-global').oninput=e=>{irPara('forn');const b=$('#busca-forn');if(b){b.value=e.target.value;tabFornecedores()}};
+    await trocarCidade();
+  }catch(e){$('#app').innerHTML='<div class="card vazio">Ainda não há dados coletados. Rode o coletor (veja o README).</div>'}
+}
+async function trocarCidade(){
+  D=await carregarCidade($('#cidade').value);
+  const anos=Object.keys(D.anos).sort().reverse();$('#ano').innerHTML=anos.map(a=>`<option>${a}</option>`).join('');
+  A=D.anos[anos[0]];
+  $('#atual').textContent='atualizado em '+new Date(D.atualizado_em).toLocaleDateString('pt-BR');
+  $('#titulo').textContent=`Para onde vai o dinheiro público de ${D.nome.replace(/\s*\(.*\)/,'')}?`;
+  if(!window.DADOS)history.replaceState(null,'','?cidade='+D.slug);
+  render();
+}
+function irPara(t){aba=t;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+t))}
+
+function render(){
+  const t=A.totais,al=A.alertas,altos=al.filter(x=>x.gravidade==='alta').length;
+  const exec=t.receita?Math.round(100*t.pago/t.receita):0;
+  $('#app').innerHTML=`
+  <section class="kpis">
+    ${kpi('Arrecadado no ano',curto(t.receita),'Receitas de todas as fontes','#ecfdf5','#059669','M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6')}
+    ${kpi('Empenhado',curto(t.empenhado),'Dinheiro reservado para gastos','#eff6ff','#2563eb','M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11')}
+    ${kpi('Efetivamente pago',curto(t.pago),exec+'% do que foi arrecadado','#f5f3ff','#7c3aed','M2 7h20v10H2zM6 12h.01M18 12h.01M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0')}
+    <div class="card kpi warn" style="cursor:pointer" onclick="irPara('alertas')"><div class="h"><span>Alertas de auditoria</span><div class="ico" style="background:#fef3c7;color:#b45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></div></div>
+      <div class="v">${al.length} indícios</div><div class="s">${altos} de prioridade alta · ver lista →</div></div>
+  </section>
+  <div class="tabs">
+    <button data-t="geral" class="on" onclick="irPara('geral')">Visão geral</button>
+    <button data-t="alertas" onclick="irPara('alertas')">Alertas <span class="badge">${al.length}</span></button>
+    <button data-t="forn" onclick="irPara('forn')">Quem recebe <span class="badge">${t.fornecedores}</span></button>
+    <button data-t="rec" onclick="irPara('rec')">De onde vem</button>
+  </div>
+  <section class="panel on" id="p-geral">
+    <div class="g2">
+      <div class="card box"><h3>Mês a mês: entrou × saiu</h3><p class="d">Arrecadação comparada a empenhos e pagamentos</p>${grafMensal()}</div>
+      <div class="card box"><h3>Quem gasta</h3><p class="d">Valores pagos por órgão</p>${donut(A.por_orgao.map(o=>({n:o.orgao,v:o.pago})))}</div>
+    </div>
+    <div class="card box"><h3>Os 8 que mais receberam</h3><p class="d">Toque num nome para ver a ficha e gerar um pedido de informação</p>
+      ${A.top_fornecedores.slice(0,8).map((f,i)=>`<div class="hb" style="cursor:pointer" onclick="fichaFornecedor(${i})"><div class="t"><span>${i+1}. ${esc(f.nome)}</span><b>${curto(f.pago)}</b></div><div class="trk"><i style="width:${100*f.pago/A.top_fornecedores[0].pago}%"></i></div></div>`).join('')}
+    </div>
+  </section>
+  <section class="panel" id="p-alertas">
+    <div class="info a"><div class="ib" style="background:var(--amb)">!</div><div><h4>Como funcionam os alertas?</h4><p>Regras automáticas procuram padrões que merecem conferência: compras divididas abaixo do limite de dispensa, fornecedores que concentram pagamentos, muitas anulações, picos de fim de ano. <b>Um alerta não é condenação, é um convite à fiscalização.</b> Use o botão de pedido de informação para pedir os documentos à prefeitura.</p></div></div>
+    <div class="filters"><select id="f-tipo" class="sel"><option value="">Todos os tipos</option>${[...new Set(al.map(x=>x.tipo))].map(x=>`<option value="${x}">${TIPOS[x]||x}</option>`).join('')}</select>
+      <select id="f-grav" class="sel"><option value="">Toda prioridade</option><option value="alta">Alta</option><option value="media">Média</option><option value="baixa">Baixa</option></select>
+      <button class="btn" onclick="exportarAlertas()">⬇ Exportar CSV</button></div>
+    <div class="alerts" id="lista-alertas"></div>
+  </section>
+  <section class="panel" id="p-forn">
+    <div class="filters"><input id="busca-forn" class="sel" style="flex:1;min-width:200px;font-weight:400" placeholder="Filtrar por nome ou CNPJ…"><button class="btn pri" onclick="exportarFornecedores()">⬇ Exportar CSV</button></div>
+    <div class="card"><div class="tbl"><table><thead><tr><th>#</th><th>Fornecedor</th><th class="n">Pago</th><th class="n hide-m">Empenhado</th><th class="n">% do total</th><th class="n hide-m">Empenhos</th></tr></thead><tbody id="tb-forn"></tbody></table></div>
+    <div class="tfoot"><span id="info-forn"></span><span>Toque numa linha para ver a ficha</span></div></div>
+  </section>
+  <section class="panel" id="p-rec">
+    <div class="info g"><div class="ib" style="background:var(--acc-d)">i</div><div><h4>De onde vem o dinheiro</h4><p>A prefeitura vive de impostos próprios (IPTU, ISS, taxas) e, principalmente, de repasses do Estado (ICMS, IPVA) e da União (FPM, SUS, Fundeb).</p></div></div>
+    <div class="g2"><div class="card box"><h3>Por fonte de recurso</h3><p class="d">Total arrecadado no ano</p>${donut(A.receita_por_fonte.map(r=>({n:r.fonte,v:r.valor})))}</div>
+    <div class="card box"><h3>Por tipo de receita</h3><p class="d">Maiores categorias</p>${A.receita_por_categoria.slice(0,10).map(r=>`<div class="hb"><div class="t"><span>${esc(r.categoria)}</span><b>${curto(r.valor)}</b></div><div class="trk"><i style="width:${100*r.valor/(A.receita_por_categoria[0]?.valor||1)}%"></i></div></div>`).join('')}</div></div>
+  </section>`;
+  $('#f-tipo').onchange=$('#f-grav').onchange=tabAlertas;$('#busca-forn').oninput=tabFornecedores;
+  tabAlertas();tabFornecedores();irPara(aba);
+}
+function kpi(l,v,s,bg,c,path){return `<div class="card kpi"><div class="h"><span>${l}</span><div class="ico" style="background:${bg};color:${c}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg></div></div><div class="v">${v}</div><div class="s">${s}</div></div>`}
+function grafMensal(){
+  const m=A.por_mes,max=Math.max(...m.flatMap(x=>[x.receita,x.empenhado,x.pago]),1);
+  return `<div class="chart">${m.map(x=>`<div class="mc" title="${x.mes}\nArrecadado: ${brl(x.receita)}\nEmpenhado: ${brl(x.empenhado)}\nPago: ${brl(x.pago)}"><i style="height:${100*x.receita/max}%;background:#059669"></i><i style="height:${100*Math.max(x.empenhado,0)/max}%;background:#93c5fd"></i><i style="height:${100*x.pago/max}%;background:#2563eb"></i></div>`).join('')}</div>
+  <div class="mlab">${m.map(x=>`<span>${x.mes}</span>`).join('')}</div>
+  <div class="leg"><span><b style="background:#059669"></b>Arrecadado</span><span><b style="background:#93c5fd"></b>Empenhado</span><span><b style="background:#2563eb"></b>Pago</span></div>`}
+function donut(itens){
+  itens=itens.filter(i=>i.v>0);const tot=itens.reduce((s,i)=>s+i.v,0)||1;
+  let top=itens.slice(0,6);if(itens.length>6)top.push({n:'Outros',v:itens.slice(6).reduce((s,i)=>s+i.v,0)});
+  let ac=0;const R=54,C=2*Math.PI*R;
+  const arcs=top.map((it,k)=>{const f=it.v/tot,s=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${CORES[k%8]}" stroke-width="22" stroke-dasharray="${f*C} ${C}" stroke-dashoffset="${-ac*C}" transform="rotate(-90 70 70)"/>`;ac+=f;return s}).join('');
+  return `<div class="donut"><svg width="140" height="140" viewBox="0 0 140 140">${arcs}<text x="70" y="66" text-anchor="middle" font-size="10" fill="currentColor" opacity=".6">total</text><text x="70" y="82" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">${curto(tot)}</text></svg>
+  <div class="dl">${top.map((it,k)=>`<div><span><i class="sw" style="background:${CORES[k%8]}"></i><em title="${esc(it.n)}">${esc(it.n)}</em></span><b>${Math.round(100*it.v/tot)}%</b></div>`).join('')}</div></div>`}
+
+function alertasFiltrados(){const t=$('#f-tipo')?.value,g=$('#f-grav')?.value;return A.alertas.filter(x=>(!t||x.tipo===t)&&(!g||x.gravidade===g))}
+function tabAlertas(){
+  const l=alertasFiltrados();
+  $('#lista-alertas').innerHTML=l.slice(0,80).map(x=>{const i=A.alertas.indexOf(x);return `<div class="card al ${x.gravidade}">
+    <div class="top"><span class="chip">${TIPOS[x.tipo]||x.tipo}</span><span><span class="chip ${x.gravidade}">${x.gravidade==='media'?'média':x.gravidade}</span>${x.mes?` <span class="chip">${x.mes}</span>`:''}</span></div>
+    <h4>${esc(x.titulo)}</h4>${x.fornecedor?`<div class="who">${esc(x.fornecedor)} · <span class="doc">${esc(x.doc)}</span></div>`:''}
+    <p class="ex">${esc(x.explicacao)}</p>${x.empenhos?`<div class="emp">Empenhos: ${x.empenhos.map(esc).join(', ')}</div>`:''}
+    <div class="act"><button class="btn" onclick="copiarAlerta(${i})">Copiar resumo</button><button class="btn amb" onclick="esicAlerta(${i})">Pedir documentos (e-SIC)</button></div></div>`}).join('')||'<div class="card vazio">Nenhum alerta com esses filtros.</div>'}
+function fornFiltrados(){const q=($('#busca-forn')?.value||'').toLowerCase().replace(/[.\-\/]/g,'');return A.top_fornecedores.map((f,i)=>({...f,i})).filter(f=>!q||f.nome.toLowerCase().includes(q)||f.doc.replace(/[.\-\/]/g,'').includes(q))}
+function tabFornecedores(){
+  const l=fornFiltrados();
+  $('#tb-forn').innerHTML=l.map(f=>`<tr class="cl" onclick="fichaFornecedor(${f.i})"><td><span class="rk">${f.i+1}</span></td><td><div class="nm">${esc(f.nome)}</div><div class="doc">${esc(f.doc)}${f.pessoa_fisica?' · pessoa física':''}</div></td><td class="n"><b>${brl(f.pago)}</b></td><td class="n hide-m">${brl(f.empenhado)}</td><td class="n"><span class="pct">${f.participacao.toLocaleString('pt-BR')}%</span></td><td class="n hide-m">${f.empenhos}</td></tr>`).join('')||'<tr><td colspan="6" class="vazio">Nenhum fornecedor encontrado.</td></tr>';
+  $('#info-forn').textContent=`Mostrando ${l.length} dos ${A.top_fornecedores.length} maiores recebedores (de ${A.totais.fornecedores} no total)`}
+
+function abrir(t,s,corpo,rodape){$('#m-t').textContent=t;$('#m-s').textContent=s;$('#m-b').innerHTML=corpo;$('#m-f').innerHTML=rodape;$('#modal').classList.add('on')}
+function fechar(){$('#modal').classList.remove('on')}
+$('#modal').onclick=e=>{if(e.target.id==='modal')fechar()};addEventListener('keydown',e=>{if(e.key==='Escape')fechar()});
+
+function fichaFornecedor(i){
+  const f=A.top_fornecedores[i],als=A.alertas.filter(a=>a.doc===f.doc);
+  abrir(f.nome,`${f.doc} · ${D.nome} · ${$('#ano').value}`,`
+    <div class="steps"><div class="on"><b>${curto(f.empenhado)}</b><span>1. Empenhado<br>verba reservada</span></div><div class="on"><b>${f.empenhos}</b><span>2. Empenhos<br>emitidos</span></div><div class="on"><b>${curto(f.pago)}</b><span>3. Pago<br>dinheiro saiu</span></div></div>
+    <div class="note">Este fornecedor recebeu <b>${f.participacao.toLocaleString('pt-BR')}%</b> de tudo que a prefeitura pagou no ano.${f.pessoa_fisica?' É pessoa física: o CPF aparece mascarado (LGPD).':' Confira a data de abertura e os sócios no cadastro de CNPJ da Receita Federal.'}</div>
+    <div><b style="font-size:13px">Alertas ligados a este fornecedor (${als.length})</b>${als.length?als.map(a=>`<div class="hb" style="margin-top:8px"><span class="chip ${a.gravidade}">${a.gravidade==='media'?'média':a.gravidade}</span> <span style="font-size:13px">${esc(a.titulo)}</span></div>`).join(''):'<p class="d" style="color:var(--mute);font-size:13px;margin:6px 0 0">Nenhum alerta automático.</p>'}</div>`,
+    `<button class="btn" onclick="fechar()">Fechar</button><button class="btn pri" onclick="esicFornecedor(${i})">Gerar pedido de informação</button>`)}
+
+function minuta(assunto,itens,pedidos){
+  return `À Ouvidoria / Serviço de Informação ao Cidadão (e-SIC) do Município de ${D.nome.replace(/\s*\(.*\)/,'')} - SP
+
+Assunto: ${assunto}
+
+Com fundamento na Lei Federal nº 12.527/2011 (Lei de Acesso à Informação), solicito acesso às seguintes informações e documentos:
+
+${itens.join('\n')}
+
+Documentos solicitados:
+${pedidos.map((p,k)=>`${k+1}. ${p}`).join('\n')}
+
+Peço o envio em formato digital, no prazo do art. 11 da Lei 12.527/2011 (até 20 dias, prorrogáveis por mais 10 mediante justificativa).
+
+Atenciosamente,
+[seu nome]`}
+function mostrarMinuta(txt){abrir('Pedido de informação (e-SIC)','Baseado na Lei de Acesso à Informação · edite antes de enviar',`<textarea id="minuta">${esc(txt)}</textarea><div class="note"><b>Como enviar:</b> copie o texto, entre no e-SIC ou na Ouvidoria do site da prefeitura e cole no pedido. A prefeitura tem até 20 dias para responder (prorrogáveis por mais 10). Guarde o número do protocolo.</div>`,
+  `<button class="btn" onclick="fechar()">Fechar</button><button class="btn pri" onclick="copiar($('#minuta').value,'Pedido copiado! Cole no e-SIC da prefeitura.')">Copiar pedido</button>`)}
+function esicFornecedor(i){const f=A.top_fornecedores[i];mostrarMinuta(minuta(`Despesas com ${f.nome} no exercício de ${$('#ano').value}`,
+  [`- Fornecedor: ${f.nome} (${f.doc})`,`- Total pago no exercício: ${brl(f.pago)} em ${f.empenhos} empenhos`,`- Fonte dos dados: Portal da Transparência Municipal do TCE-SP`],
+  ['Relação dos contratos, atas de registro de preços e processos de compra (com modalidade de licitação) que deram origem a esses pagamentos;','Cópia dos contratos e eventuais termos aditivos;','Notas fiscais e documentos de atesto/recebimento assinados pelo fiscal do contrato.']))}
+function esicAlerta(i){const a=A.alertas[i];mostrarMinuta(minuta(`Esclarecimentos sobre despesas — ${TIPOS[a.tipo]||a.tipo}`,
+  [`- Situação observada nos dados públicos: ${a.titulo}`,a.fornecedor?`- Fornecedor: ${a.fornecedor} (${a.doc})`:'',a.mes?`- Mês de referência: ${a.mes}/${$('#ano').value}`:'',a.empenhos?`- Empenhos: ${a.empenhos.join(', ')}`:''].filter(Boolean),
+  ['Modalidade de contratação e número do processo de cada empenho citado;','Justificativas técnicas e pareceres que fundamentaram as contratações;','Cópia dos contratos, notas fiscais e documentos de recebimento correspondentes.']))}
+function copiarAlerta(i){const a=A.alertas[i];copiar(`[Olho Público · ${D.nome}] ${a.titulo}${a.fornecedor?` | ${a.fornecedor} (${a.doc})`:''} | ${a.explicacao} | Fonte: TCE-SP`,'Resumo do alerta copiado')}
+function exportarFornecedores(){baixarCSV(`fornecedores-${D.slug}-${$('#ano').value}.csv`,[['posicao','fornecedor','cnpj_cpf','pago','empenhado','participacao_pct','empenhos'],...fornFiltrados().map(f=>[f.i+1,f.nome,f.doc,f.pago.toFixed(2).replace('.',','),f.empenhado.toFixed(2).replace('.',','),String(f.participacao).replace('.',','),f.empenhos])])}
+function exportarAlertas(){baixarCSV(`alertas-${D.slug}-${$('#ano').value}.csv`,[['tipo','prioridade','titulo','fornecedor','documento','mes','valor','empenhos','explicacao'],...alertasFiltrados().map(a=>[TIPOS[a.tipo]||a.tipo,a.gravidade,a.titulo,a.fornecedor,a.doc,a.mes,(a.valor||0).toFixed(2).replace('.',','),(a.empenhos||[]).join(' '),a.explicacao])])}
+init();
+</script>
+</body>
+</html>

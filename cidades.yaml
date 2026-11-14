@@ -1,0 +1,19 @@
+# Cidades monitoradas. "slug" é o nome usado na API do TCE-SP
+# (minúsculo, sem acento, espaços viram hífen — ex.: "santa-gertrudes").
+# Para adicionar uma cidade, basta acrescentar uma linha.
+cidades:
+  - slug: leme
+    nome: Leme
+  # - slug: araras
+  #   nome: Araras
+  # - slug: pirassununga
+  #   nome: Pirassununga
+
+# Anos a coletar
+anos: [2025, 2026]
+
+# Limite de dispensa de licitação por valor (Lei 14.133/21, art. 75, II),
+# atualizado por decreto todo ano. Confira o valor vigente antes de publicar.
+limite_dispensa:
+  2025: 62725.59
+  2026: 62725.59
