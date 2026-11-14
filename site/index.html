@@ -104,6 +104,11 @@ footer .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr
 footer a{color:#94a3b8;text-decoration:none;display:block;padding:2px 0}footer a:hover{color:#34d399}footer p{margin:0}
 .toast{position:fixed;bottom:18px;left:50%;transform:translate(-50%,20px);opacity:0;background:#0f172a;color:#fff;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:500;transition:.25s;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.3);pointer-events:none}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+.selo{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;margin-bottom:14px;font-size:13px;border:1px solid}
+.selo.ok{background:var(--acc-s);border-color:rgba(16,185,129,.35)}.selo.dif{background:var(--amb-s);border-color:rgba(217,119,6,.35)}.selo.na{background:var(--soft);border-color:var(--line)}
+.selo .sb{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex-shrink:0}
+.selo>div:last-child{min-width:0;flex:1}.selo .tw{overflow-x:auto;margin:0 -4px}.selo h4{margin:0 0 2px;font-size:13.5px}.selo p{margin:0;color:var(--ink2)}.selo details{margin-top:6px}.selo summary{cursor:pointer;color:var(--acc-d);font-weight:600}
+.selo table{margin-top:6px;font-size:12px}.selo td,.selo th{padding:5px 8px;background:none}
 .vazio{padding:50px 20px;text-align:center;color:var(--mute)}
 @media(max-width:640px){.search{display:none}.logo small{display:none}.logo b{font-size:15px}nav .sel{padding:7px 6px;font-size:13px}nav .wrap{gap:8px}.hide-m{display:none}.hero{padding:20px}nav .wrap{height:58px}}
 </style>
@@ -175,9 +180,11 @@ function irPara(t){aba=t;document.querySelectorAll('.tabs button').forEach(b=>b.
 function render(){
   const t=A.totais,al=A.alertas,altos=al.filter(x=>x.gravidade==='alta').length;
   const exec=t.receita?Math.round(100*t.pago/t.receita):0;
+  const of=A.oficial,pop=of?.populacao;
   $('#app').innerHTML=`
+  ${selo(of)}
   <section class="kpis">
-    ${kpi('Arrecadado no ano',curto(t.receita),'Receitas de todas as fontes','#ecfdf5','#059669','M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6')}
+    ${kpi('Arrecadado no ano',curto(t.receita),pop?`${brl(t.receita/pop).replace(/,\d+$/,'')} por habitante · ${pop.toLocaleString('pt-BR')} hab.`:'Receitas de todas as fontes','#ecfdf5','#059669','M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6')}
     ${kpi('Empenhado',curto(t.empenhado),'Dinheiro reservado para gastos','#eff6ff','#2563eb','M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11')}
     ${kpi('Efetivamente pago',curto(t.pago),exec+'% do que foi arrecadado','#f5f3ff','#7c3aed','M2 7h20v10H2zM6 12h.01M18 12h.01M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0')}
     <div class="card kpi warn" style="cursor:pointer" onclick="irPara('alertas')"><div class="h"><span>Alertas de auditoria</span><div class="ico" style="background:#fef3c7;color:#b45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></div></div>
@@ -218,6 +225,14 @@ function render(){
   $('#f-tipo').onchange=$('#f-grav').onchange=tabAlertas;$('#busca-forn').oninput=tabFornecedores;
   tabAlertas();tabFornecedores();irPara(aba);
 }
+function selo(of){
+  const NOME={receita:'Receita arrecadada',empenhado:'Despesa empenhada',pago:'Despesa paga'};
+  if(!of)return `<div class="selo na"><div class="sb" style="background:var(--mute)">?</div><div><h4>Ainda não conferido com o Tesouro Nacional</h4><p>O relatório fiscal oficial (RREO) desta cidade ainda não está disponível no Siconfi.</p></div></div>`;
+  const per=`até o ${of.periodo}º bimestre (jan–${['','','fev','','abr','','jun','','ago','','out','','dez'][of.mes_final]})`;
+  const tab=`<details><summary>Ver a comparação</summary><div class="tw"><table><tr><th></th><th class="n">Calculado (TCE-SP)</th><th class="n">Oficial (Tesouro)</th><th class="n">Diferença</th></tr>${Object.entries(of.itens).map(([k,v])=>`<tr><td>${NOME[k]}</td><td class="n">${brl(v.calculado)}</td><td class="n">${brl(v.tesouro)}</td><td class="n">${v.diferenca_pct===0?'0':v.diferenca_pct.toLocaleString('pt-BR')}%</td></tr>`).join('')}</table></div><p style="margin-top:6px">Fonte oficial: Relatório Resumido da Execução Orçamentária (RREO, Anexo 1) entregue pela prefeitura ao Tesouro Nacional, sistema Siconfi. Consulte em <a href="https://siconfi.tesouro.gov.br" target="_blank" rel="noopener">siconfi.tesouro.gov.br</a>.</p></details>`;
+  return of.conferido
+    ?`<div class="selo ok"><div class="sb" style="background:var(--acc-d)">✓</div><div><h4>Números conferidos com o Tesouro Nacional</h4><p>Receita, empenho e pagamento calculados a partir dos dados detalhados do TCE-SP batem com o relatório fiscal oficial da prefeitura ${per}.</p>${tab}</div></div>`
+    :`<div class="selo dif"><div class="sb" style="background:var(--amb)">!</div><div><h4>Há diferença em relação ao Tesouro Nacional</h4><p>Os totais calculados a partir do TCE-SP não batem com o relatório fiscal oficial ${per}. Pode ser atraso na publicação de uma das fontes ou dados declarados de forma diferente.</p>${tab}</div></div>`}
 function kpi(l,v,s,bg,c,path){return `<div class="card kpi"><div class="h"><span>${l}</span><div class="ico" style="background:${bg};color:${c}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg></div></div><div class="v">${v}</div><div class="s">${s}</div></div>`}
 function grafMensal(){
   const m=A.por_mes,max=Math.max(...m.flatMap(x=>[x.receita,x.empenhado,x.pago]),1);

@@ -37,6 +37,9 @@ jobs:
       - name: Coletar no TCE-SP
         run: timeout 300m python coletor/coletar.py || echo "coleta parcial; segue com o que foi baixado"
 
+      - name: Totais oficiais do Tesouro Nacional (Siconfi) para conferência
+        run: cd coletor && timeout 30m python siconfi.py || echo "Siconfi indisponível; segue sem conferência"
+
       - name: Guardar dados brutos para a próxima execução
         if: always()
         uses: actions/cache/save@v4

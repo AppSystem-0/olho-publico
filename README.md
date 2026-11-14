@@ -5,9 +5,10 @@ Painel aberto das contas de prefeituras paulistas: de onde vem o dinheiro, quem 
 ## Como funciona
 
 1. **`coletor/coletar.py`** baixa despesas (empenhos, liquidações, pagamentos) e receitas mês a mês da API aberta do TCE-SP (`transparencia.tce.sp.gov.br/api`). Os dados brutos ficam compactados em `dados/` (no cache do GitHub Actions, fora do git, porque cidades grandes como Campinas passam de 1 GB); o resumo publicado em `site/dados/` fica versionado no git, com histórico auditável.
-2. **`coletor/processar.py`** gera os resumos e os **alertas** em `site/dados/`.
-3. **`site/index.html`** é o painel: um arquivo estático, sem servidor.
-4. **GitHub Actions** roda tudo todo dia e publica no GitHub Pages. Custo: zero.
+2. **`coletor/siconfi.py`** baixa do Tesouro Nacional (Siconfi, RREO Anexo 1) os totais oficiais de receita, empenho e pagamento, para conferir os nossos cálculos. Em Leme 2025 os três totais batem centavo por centavo.
+3. **`coletor/processar.py`** gera os resumos e os **alertas** em `site/dados/`.
+4. **`site/index.html`** é o painel: um arquivo estático, sem servidor.
+5. **GitHub Actions** roda tudo todo dia e publica no GitHub Pages. Custo: zero.
 
 ## Colocar no ar (cerca de 10 minutos)
 

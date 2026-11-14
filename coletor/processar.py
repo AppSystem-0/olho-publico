@@ -190,6 +190,7 @@ def processar_cidade(slug: str, nome: str, limites: dict):
         d_ano = [d for d in desp if d["ano"] == ano]
         r_ano = [r for r in rec if r["ano"] == ano]
         por_ano[str(ano)] = resumo_ano(d_ano, r_ano, limites.get(ano, 62725.59))
+        por_ano[str(ano)]["oficial"] = conferir_tesouro(pasta / f"siconfi-{ano}.json", por_ano[str(ano)]["por_mes"])
 
     return {
         "slug": slug,
@@ -199,6 +200,26 @@ def processar_cidade(slug: str, nome: str, limites: dict):
         "fonte_url": "https://transparencia.tce.sp.gov.br/",
         "anos": por_ano,
     }
+
+
+def conferir_tesouro(arq: Path, por_mes):
+    """Compara os totais calculados a partir do TCE com os totais oficiais do Tesouro (RREO),
+    no mesmo período (até o último bimestre publicado)."""
+    if not arq.exists():
+        return None
+    of = json.loads(arq.read_text(encoding="utf-8"))
+    ate = of["mes_final"]
+    nosso = {k: round(sum(m[k] for m in por_mes[:ate]), 2) for k in ("receita", "empenhado", "pago")}
+    itens = {}
+    for k in ("receita", "empenhado", "pago"):
+        o = of.get(k)
+        if o is None:
+            continue
+        dif = round(100 * (nosso[k] - o) / o, 3) if o else None
+        itens[k] = {"tesouro": o, "calculado": nosso[k], "diferenca_pct": dif}
+    ok = bool(itens) and all(v["diferenca_pct"] is not None and abs(v["diferenca_pct"]) < 1 for v in itens.values())
+    return {"periodo": of["periodo"], "mes_final": ate, "populacao": of.get("populacao"),
+            "cod_ibge": of.get("cod_ibge"), "liquidado": of.get("liquidado"), "itens": itens, "conferido": ok}
 
 
 def soma(itens, chave="valor"):
