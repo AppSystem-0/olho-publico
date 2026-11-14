@@ -2,15 +2,13 @@
 import collections, json, sys, requests
 B = "https://apidatalake.tesouro.gov.br/ords/siconfi/tt"
 def get(path, **p):
-    r = requests.get(f"{B}/{path}", params=p, timeout=120); print("GET", r.url, r.status_code, flush=True)
+    r = requests.get(f"{B}/{path}", params=p, timeout=300); print("GET", r.url, r.status_code, flush=True)
     r.raise_for_status(); return r.json()
 entes = get("entes")["items"]
 sp = [e for e in entes if e.get("uf") == "SP" and "leme" == str(e.get("ente", "")).lower()]
 print("ENTE:", json.dumps(sp, ensure_ascii=False))
 print("CAMPOS ENTE:", list(entes[0].keys()))
 ibge = sp[0]["cod_ibge"]
-anexos = get("anexos-relatorios")["items"]
-print("ANEXOS RREO:", sorted({a.get("no_anexo") for a in anexos if "RREO" in str(a.get("no_anexo", "")) or a.get("demonstrativo") == "RREO"}))
 for ano, per in [(2025, 6), (2026, 4)]:
     for anexo in ["RREO-Anexo 01", "RREO-Anexo 08", "RREO-Anexo 12", "RREO-Anexo 03"]:
         try:
