@@ -354,11 +354,11 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
         if part >= 3:
             alertas.append({
                 "tipo": "concentracao", "gravidade": "alta" if part >= 10 else "media",
-                "titulo": f"{f['nome']} recebeu {str(round(part, 1)).replace('.', ',')}% do que foi pago a empresas privadas",
+                "titulo": f"{f['nome']} recebeu {str(round(part, 1)).replace('.', ',')}% de todo o dinheiro que a prefeitura pagou a empresas",
                 "fornecedor": f["nome"], "doc": mascarar(k), "valor": round(f["pago"], 2),
-                "explicacao": ("Dado estatístico: participação deste fornecedor no total pago a empresas privadas no ano. "
-                               "É comum que serviços contínuos (saúde conveniada, alimentação, transporte, limpeza) "
-                               "concentrem os maiores valores. Os contratos podem ser consultados no PNCP ou solicitados à prefeitura."),
+                "explicacao": ("É uma das empresas que mais receberam no ano. Isso é comum em serviços que funcionam "
+                               "o ano inteiro, como hospital, merenda, ônibus e limpeza. Se quiser saber o que foi contratado, "
+                               "você pode pedir o contrato à prefeitura."),
             })
 
     # 3) Anulações altas.
@@ -366,10 +366,10 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
         if privado(k, f["nome"]) and f["empenhado"] > 2 * limite and f["anulado"] / f["empenhado"] > 0.3:
             alertas.append({
                 "tipo": "anulacoes", "gravidade": "baixa",
-                "titulo": f"{round(100 * f['anulado'] / f['empenhado'])}% do valor empenhado para {f['nome']} foi anulado",
+                "titulo": f"A prefeitura cancelou {round(100 * f['anulado'] / f['empenhado'])}% do valor que tinha prometido a {f['nome']}",
                 "fornecedor": f["nome"], "doc": mascarar(k), "valor": round(f["anulado"], 2),
-                "explicacao": ("Dado estatístico: parte do valor reservado (empenhado) para este fornecedor foi cancelada depois. "
-                               "Anulações são procedimentos contábeis normais, usadas para ajustar valores e quantidades."),
+                "explicacao": ("A prefeitura separou um dinheiro para pagar esta empresa e depois cancelou parte dele. "
+                               "Isso é normal: acontece, por exemplo, quando se compra menos do que o previsto."),
             })
 
     # 4) Pico de fim de ano.
@@ -379,10 +379,9 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
         if por_mes[11]["empenhado"] > 2 * media:
             alertas.append({
                 "tipo": "pico_dezembro", "gravidade": "media",
-                "titulo": f"Empenhos de dezembro foram {str(round(por_mes[11]['empenhado'] / media, 1)).replace('.', ',')}x a média do ano",
+                "titulo": f"Em dezembro a prefeitura prometeu {str(round(por_mes[11]['empenhado'] / media, 1)).replace('.', ',')} vezes mais dinheiro que nos outros meses",
                 "valor": por_mes[11]["empenhado"],
-                "explicacao": ("Dado estatístico: o valor empenhado em dezembro ficou acima da média dos outros meses. "
-                               "É comum haver concentração de empenhos no fim do exercício."),
+                "explicacao": ("É comum as prefeituras fecharem muitas compras no fim do ano, antes de o ano do orçamento acabar."),
             })
 
     # 5) Fornecedor privado que só aparece em um mês, com valor alto.
@@ -396,11 +395,11 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
         if len(ms) == 1 and valor_forn[k] > 5 * limite and privado(k, forn[k]["nome"]):
             alertas.append({
                 "tipo": "fornecedor_pontual", "gravidade": "baixa",
-                "titulo": f"{forn[k]['nome']} aparece em um único mês com {brl(valor_forn[k])}",
+                "titulo": f"{forn[k]['nome']} recebeu {brl(valor_forn[k])}, tudo em um único mês",
                 "fornecedor": forn[k]["nome"], "doc": mascarar(k), "valor": round(valor_forn[k], 2),
                 "mes": MESES[next(iter(ms)) - 1],
-                "explicacao": ("Dado estatístico: todos os empenhos deste fornecedor no ano ocorreram em um único mês. "
-                               "É comum em compras únicas, como equipamentos, obras e eventos."),
+                "explicacao": ("Todas as compras desta empresa no ano aconteceram no mesmo mês. Isso é comum em compras "
+                               "feitas de uma vez só, como equipamentos, obras ou eventos."),
             })
 
     alertas = [a for a in alertas if a["tipo"] not in DESATIVADOS]

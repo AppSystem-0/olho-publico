@@ -56,10 +56,10 @@ nav .wrap{display:flex;align-items:center;gap:14px;height:62px}
 .mlab{display:flex;gap:5px;margin-top:6px}.mlab span{flex:1;text-align:center;font-size:11px;color:var(--mute)}
 .leg{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-top:10px}.leg b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 .donut{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-.donut svg{flex-shrink:0}.dl{flex:1;min-width:160px}.dl div{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;padding:4px 0;border-bottom:1px dashed var(--line)}
-.dl span{display:flex;align-items:center;gap:7px;overflow:hidden}.dl span em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dl b{font-weight:700;white-space:nowrap}
+.donut svg{flex-shrink:0}.dl{flex:1;min-width:160px}.dl div{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;padding:4px 0;border-bottom:1px dashed var(--line)}
+.dl span{display:flex;align-items:center;gap:7px;overflow:hidden}.dl span em{font-style:normal;line-height:1.3}.dl b{font-weight:700;white-space:nowrap}
 .sw{width:10px;height:10px;border-radius:3px;flex-shrink:0}
-.hb{margin:10px 0}.hb .t{display:flex;justify-content:space-between;gap:10px;font-size:12.5px}.hb .t span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink2)}.hb .t b{white-space:nowrap}
+.hb{margin:10px 0}.hb .t{display:flex;justify-content:space-between;gap:10px;font-size:12.5px}.hb .t span:first-child{color:var(--ink2);line-height:1.35}.hb .t b{white-space:nowrap}
 .trk{height:7px;background:var(--soft);border-radius:4px;margin-top:4px;overflow:hidden}.trk i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--acc-d),var(--acc))}
 .info{display:flex;gap:12px;padding:14px 16px;border-radius:14px;margin-bottom:14px;font-size:13px}
 .info.g{background:var(--acc-s);border:1px solid rgba(16,185,129,.3)}.info.a{background:var(--amb-s);border:1px solid rgba(217,119,6,.3)}
@@ -108,6 +108,7 @@ footer a{color:#94a3b8;text-decoration:none;display:block;padding:2px 0}footer a
 .selo>div:last-child{min-width:0;flex:1}.selo .tw{overflow-x:auto;margin:0 -4px}.selo h4{margin:0 0 2px;font-size:13.5px}.selo p{margin:0;color:var(--ink2)}.selo details{margin-top:6px}.selo summary{cursor:pointer;color:var(--acc-d);font-weight:600}
 .selo table{margin-top:6px;font-size:12px}.selo td,.selo th{padding:5px 8px;background:none}
 .mais{display:block;width:100%;margin-top:12px;padding:12px;border:1px dashed var(--line);border-radius:12px;background:var(--card);font-weight:600;color:var(--acc-d);cursor:pointer}
+.fonte{margin:12px 0 0;font-size:11.5px;color:var(--mute)}.fonte a{color:var(--mute)}
 .vazio{padding:50px 20px;text-align:center;color:var(--mute)}
 @media(max-width:640px){
   body{font-size:14px}
@@ -147,19 +148,19 @@ footer a{color:#94a3b8;text-decoration:none;display:block;padding:2px 0}footer a
 </style>
 </head>
 <body>
-<div class="topbar"><div class="wrap"><span><span class="dot"></span>Iniciativa cidadã independente · dados abertos oficiais</span><span>Fonte: <b>TCE-SP / Audesp</b> · <span id="atual">—</span></span></div></div>
+<div class="topbar"><div class="wrap"><span><span class="dot"></span>Iniciativa cidadã independente · dados abertos oficiais</span><span>Fonte: <b>Tribunal de Contas do Estado</b> · <span id="atual">—</span></span></div></div>
 <nav><div class="wrap">
   <div class="logo"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M9 10h3a1 1 0 0 1 0 2h-2a1 1 0 0 0 0 2h3"/></svg></div>
     <div><b>Olho<span>Público</span></b><small>Cada real sob o olhar do cidadão</small></div></div>
-  <div class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="busca-global" placeholder="Buscar fornecedor ou CNPJ…"></div>
+  <div class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="busca-global" placeholder="Buscar empresa…"></div>
   <select id="cidade" class="sel" aria-label="Cidade"></select><select id="ano" class="sel" aria-label="Ano"></select>
 </div></nav>
 
 <main class="wrap">
   <section class="hero">
-    <span class="pill">● Dados públicos oficiais, explicados</span>
+    <span class="pill">● Dados oficiais, em palavras simples</span>
     <h1 id="titulo">Para onde vai o dinheiro público?</h1>
-    <p>Receitas, empenhos e pagamentos declarados pela prefeitura ao Tribunal de Contas do Estado, conferidos com o Tesouro Nacional. Veja de onde vem e para onde vai o dinheiro público.</p>
+    <p>Veja quanto dinheiro a prefeitura recebeu, com o que gastou e quem recebeu. São informações oficiais, atualizadas todo dia. <a href="sobre.html#palavras" style="color:#6ee7b7;font-weight:600">Não entendeu alguma palavra? Veja o dicionário.</a></p>
   </section>
   <div id="app"><div class="vazio">Carregando…</div></div>
 </main>
@@ -179,8 +180,36 @@ const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const curto=v=>{const a=Math.abs(v),f=(n,d)=>n.toLocaleString('pt-BR',{maximumFractionDigits:d});return a>=1e9?'R$ '+f(v/1e9,2)+' bi':a>=1e6?'R$ '+f(v/1e6,1)+' mi':a>=1e3?'R$ '+f(v/1e3,0)+' mil':brl(v)};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const semCodigo=t=>String(t??'').replace(/^\s*[\d.]+\s*-\s*/,'');
-const TIPOS={fracionamento:'Compras parceladas',concentracao:'Maiores participações',anulacoes:'Empenhos anulados',pico_dezembro:'Empenhos em dezembro',fornecedor_pontual:'Fornecimento em um único mês'};
-const RELEV={alta:'relevância alta',media:'relevância média',baixa:'relevância baixa'};
+const F_TCE='<p class="fonte">Fonte: <a href="https://transparencia.tce.sp.gov.br/" target="_blank" rel="noopener">Tribunal de Contas do Estado de São Paulo</a>, com dados informados pela própria prefeitura.</p>';
+const F_TES='<p class="fonte">Fonte: <a href="https://siconfi.tesouro.gov.br/" target="_blank" rel="noopener">Tesouro Nacional (Siconfi)</a>.</p>';
+const SIMPLES=[
+ [/^TESOURO$/i,'Dinheiro livre da prefeitura (impostos e repasses sem destino fixo)'],
+ [/TRANSFER.*ESTADUA/i,'Repasses do Governo do Estado com destino certo'],
+ [/TRANSFER.*FEDER/i,'Repasses do Governo Federal com destino certo'],
+ [/PR[ÓO]PRIOS DA ADMINISTRA/i,'Dinheiro próprio de autarquias (água e esgoto, previdência)'],
+ [/FUNDOS ESPECIAIS/i,'Fundos especiais da prefeitura'],
+ [/OPERA[ÇC][ÕO]ES DE CR[ÉE]DITO/i,'Empréstimos'],
+ [/OUTRAS FONTES/i,'Outras fontes'],
+ [/Impostos? sobre Servi[çc]os/i,'ISS: imposto pago por quem presta serviços'],
+ [/Propriedade Predial e Territorial/i,'IPTU: imposto sobre casas e terrenos'],
+ [/Cota-Parte do ICMS/i,'Parte do ICMS (imposto do Estado sobre o que é vendido)'],
+ [/Cota-Parte do IPVA/i,'Parte do IPVA (imposto dos veículos)'],
+ [/Fundo de Participa[çc][ãa]o dos Munic/i,'FPM: repasse do Governo Federal para as cidades'],
+ [/FUNDEB/i,'Fundeb: dinheiro para a educação'],
+ [/Sistema [ÚU]nico de Sa[úu]de|\bSUS\b/i,'SUS: dinheiro para a saúde'],
+ [/Imposto sobre a Renda/i,'Imposto de renda descontado do salário dos funcionários'],
+ [/Transmiss[ãa]o .*Bens Im[óo]veis|ITBI/i,'ITBI: imposto na compra de imóveis'],
+ [/Remunera[çc][ãa]o de Dep[óo]sitos Banc/i,'Rendimento do dinheiro guardado no banco'],
+ [/Intra OFSS|Intra-Or/i,'Dinheiro que passa de um setor da prefeitura para outro'],
+ [/D[ée]ficit Atuarial|Regime Pr[óo]prio de Previd|RPPS/i,'Dinheiro para a aposentadoria dos funcionários'],
+ [/Contribui[çc][ãa]o Patronal/i,'Contribuição da prefeitura para a aposentadoria dos funcionários'],
+ [/Servi[çc]os Sujeitos/i,'Tarifas pagas pelos moradores, como água e esgoto'],
+ [/Ilumina[çc][ãa]o P[úu]blica/i,'Taxa da iluminação das ruas'],
+ [/Taxas?/i,'Taxas pagas pelos moradores'],
+];
+const simples=t=>{const b=semCodigo(t);for(const[r,n]of SIMPLES)if(r.test(b))return n;return b.charAt(0)+b.slice(1).toLowerCase()};
+const TIPOS={fracionamento:'Compras em partes',concentracao:'Quem mais recebeu',anulacoes:'Compras canceladas',pico_dezembro:'Muito gasto em dezembro',fornecedor_pontual:'Recebeu tudo em um mês'};
+const RELEV={alta:'valor alto',media:'valor médio',baixa:'valor menor'};
 const CORES=['#059669','#2563eb','#d97706','#7c3aed','#db2777','#0891b2','#65a30d','#94a3b8'];
 let D=null,A=null,aba='geral',limAl=12,limF=20;
 
@@ -219,61 +248,62 @@ function render(){
   $('#app').innerHTML=`
   ${selo(of)}
   <section class="kpis">
-    ${kpi('Arrecadado',curto(t.receita),pop?`${brl(t.receita/pop).replace(/,\d+$/,'')} por habitante · ${pop.toLocaleString('pt-BR')} hab.`:'Receitas de todas as fontes','#ecfdf5','#059669','M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6')}
-    ${kpi('Empenhado',curto(t.empenhado),'Dinheiro reservado para gastos','#eff6ff','#2563eb','M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11')}
-    ${kpi('Efetivamente pago',curto(t.pago),exec+'% do que foi arrecadado','#f5f3ff','#7c3aed','M2 7h20v10H2zM6 12h.01M18 12h.01M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0')}
-    <div class="card kpi warn" style="cursor:pointer" onclick="irPara('alertas')"><div class="h"><span>Pontos de atenção</span><div class="ico" style="background:#fef3c7;color:#b45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></div></div>
-      <div class="v">${al.length}</div><div class="s">padrões estatísticos para consulta · ver lista →</div></div>
+    ${kpi('Dinheiro que entrou',curto(t.receita),pop?`${brl(t.receita/pop).replace(/,\d+$/,'')} por morador · ${pop.toLocaleString('pt-BR')} moradores`:'Impostos e repasses do Estado e do país','#ecfdf5','#059669','M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6')}
+    ${kpi('Prometido',curto(t.empenhado),'Já separado para pagar compras, obras e salários','#eff6ff','#2563eb','M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11')}
+    ${kpi('Já pago',curto(t.pago),'Dinheiro que já saiu do caixa ('+exec+'% do que entrou)','#f5f3ff','#7c3aed','M2 7h20v10H2zM6 12h.01M18 12h.01M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0')}
+    <div class="card kpi warn" style="cursor:pointer" onclick="irPara('alertas')"><div class="h"><span>Chamam atenção</span><div class="ico" style="background:#fef3c7;color:#b45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></div></div>
+      <div class="v">${al.length}</div><div class="s">números que se destacam (não quer dizer que há algo errado) · ver →</div></div>
   </section>
+  <p class="fonte" style="margin:-6px 0 14px">Fonte dos números acima: <a href="https://transparencia.tce.sp.gov.br/" target="_blank" rel="noopener">Tribunal de Contas do Estado de SP</a>${pop?' · moradores: <a href="https://siconfi.tesouro.gov.br/" target="_blank" rel="noopener">Tesouro Nacional</a>':''}. Os dados são informados pela própria prefeitura.</p>
   <div class="tabs">
-    <button data-t="geral" class="on" onclick="irPara('geral',1)">Visão geral</button>
-    <button data-t="alertas" onclick="irPara('alertas',1)">Pontos de atenção <span class="badge">${al.length}</span></button>
-    <button data-t="forn" onclick="irPara('forn',1)">Quem recebe <span class="badge">${t.fornecedores}</span></button>
-    <button data-t="rec" onclick="irPara('rec',1)">De onde vem</button>
+    <button data-t="geral" class="on" onclick="irPara('geral',1)">Resumo</button>
+    <button data-t="alertas" onclick="irPara('alertas',1)">Chamam atenção <span class="badge">${al.length}</span></button>
+    <button data-t="forn" onclick="irPara('forn',1)">Quem recebeu <span class="badge">${t.fornecedores}</span></button>
+    <button data-t="rec" onclick="irPara('rec',1)">De onde veio</button>
   </div>
   <section class="panel on" id="p-geral">
     <div class="g2">
-      <div class="card box"><h3>Mês a mês: entrou × saiu</h3><p class="d">Arrecadação comparada a empenhos e pagamentos</p>${grafMensal()}</div>
-      <div class="card box"><h3>Quem gasta</h3><p class="d">Valores pagos por órgão</p>${donut(A.por_orgao.map(o=>({n:o.orgao,v:o.pago})))}</div>
+      <div class="card box"><h3>Mês a mês: quanto entrou e quanto saiu</h3><p class="d">Verde: dinheiro que entrou. Azul claro: prometido. Azul escuro: já pago</p>${grafMensal()}</div>
+      <div class="card box"><h3>Quem gastou</h3><p class="d">Quanto cada parte da prefeitura pagou</p>${donut(A.por_orgao.map(o=>({n:o.orgao,v:o.pago})))}${F_TCE}</div>
     </div>
-    <div class="card box"><h3>Os 8 que mais receberam</h3><p class="d">Inclui folha de pagamento (aparece como a própria prefeitura), previdência e repasses. Toque num nome para ver a ficha.</p>
+    <div class="card box"><h3>Quem mais recebeu dinheiro</h3><p class="d">Os salários dos funcionários aparecem com o nome da própria prefeitura, e a aposentadoria deles com o nome do instituto de previdência. Toque num nome para ver mais.</p>
       ${A.top_fornecedores.slice(0,8).map((f,i)=>`<div class="hb" style="cursor:pointer" onclick="fichaFornecedor(${i})"><div class="t"><span>${i+1}. ${esc(f.nome)}</span><b>${curto(f.pago)}</b></div><div class="trk"><i style="width:${100*f.pago/A.top_fornecedores[0].pago}%"></i></div></div>`).join('')}
-    </div>
+    ${F_TCE}</div>
   </section>
   <section class="panel" id="p-alertas">
-    <div class="info a"><div class="ib" style="background:var(--amb)">!</div><div><h4>O que são os pontos de atenção?</h4><p>São padrões estatísticos calculados automaticamente a partir dos dados oficiais: maiores participações nos pagamentos, empenhos anulados, gastos concentrados em um mês. <b>Não indicam irregularidade, ilegalidade ou má-fé de nenhuma pessoa, empresa ou órgão.</b> Servem apenas para orientar a consulta aos documentos oficiais, que podem ser pedidos à prefeitura pela Lei de Acesso à Informação. <a href="sobre.html#pontos">Saiba mais</a>.</p></div></div>
+    <div class="info a"><div class="ib" style="background:var(--amb)">!</div><div><h4>O que é isto?</h4><p>Um computador olha os números e mostra os que se destacam: por exemplo, a empresa que mais recebeu ou um mês com muito gasto. <b>Isso não quer dizer que alguém fez algo errado.</b> Quase sempre há uma explicação normal. Se você tiver curiosidade, pode pedir mais informações à prefeitura. É um direito seu. <a href="sobre.html#pontos">Saiba mais</a>.</p></div></div>
     <div class="filters"><select id="f-tipo" class="sel"><option value="">Todos os tipos</option>${[...new Set(al.map(x=>x.tipo))].map(x=>`<option value="${x}">${TIPOS[x]||x}</option>`).join('')}</select>
-      <select id="f-grav" class="sel"><option value="">Toda relevância</option><option value="alta">Relevância alta</option><option value="media">Relevância média</option><option value="baixa">Relevância baixa</option></select>
-      <button class="btn" onclick="exportarAlertas()">⬇ Exportar CSV</button></div>
+      <select id="f-grav" class="sel"><option value="">Todos os valores</option><option value="alta">Valor alto</option><option value="media">Valor médio</option><option value="baixa">Valor menor</option></select>
+      <button class="btn" onclick="exportarAlertas()">⬇ Baixar planilha</button></div>
     <div class="alerts" id="lista-alertas"></div><div id="mais-al"></div>
   </section>
   <section class="panel" id="p-forn">
-    <div class="filters"><input id="busca-forn" class="sel" style="flex:1;min-width:200px;font-weight:400" placeholder="Filtrar por nome ou CNPJ…"><button class="btn pri" onclick="exportarFornecedores()">⬇ Exportar CSV</button></div>
-    <div class="card"><div class="tbl"><table><thead><tr><th>#</th><th>Fornecedor</th><th class="n">Pago</th><th class="n hide-m">Empenhado</th><th class="n">% do total</th><th class="n hide-m">Empenhos</th></tr></thead><tbody id="tb-forn"></tbody></table></div><div id="mais-f"></div>
-    <div class="tfoot"><span id="info-forn"></span><span>Toque numa linha para ver a ficha</span></div></div>
+    <div class="filters"><input id="busca-forn" class="sel" style="flex:1;min-width:200px;font-weight:400" placeholder="Procurar uma empresa…"><button class="btn pri" onclick="exportarFornecedores()">⬇ Baixar planilha</button></div>
+    <div class="card"><div class="tbl"><table><thead><tr><th>#</th><th>Quem recebeu</th><th class="n">Já pago</th><th class="n hide-m">Prometido</th><th class="n">Fatia do total</th><th class="n hide-m">Nº de compras</th></tr></thead><tbody id="tb-forn"></tbody></table></div><div id="mais-f"></div>
+    <div class="tfoot"><span id="info-forn"></span><span>Toque num nome para ver mais</span></div></div><p class="fonte">Fonte: <a href="https://transparencia.tce.sp.gov.br/" target="_blank" rel="noopener">Tribunal de Contas do Estado de São Paulo</a>, com dados informados pela própria prefeitura. Nomes de pessoas não são mostrados.</p>
   </section>
   <section class="panel" id="p-rec">
-    <div class="info g"><div class="ib" style="background:var(--acc-d)">i</div><div><h4>De onde vem o dinheiro</h4><p>A prefeitura vive de impostos próprios (IPTU, ISS, taxas) e, principalmente, de repasses do Estado (ICMS, IPVA) e da União (FPM, SUS, Fundeb).</p></div></div>
-    <div class="g2"><div class="card box"><h3>Por fonte de recurso</h3><p class="d">Total arrecadado no ano</p>${donut(A.receita_por_fonte.map(r=>({n:semCodigo(r.fonte),v:r.valor})))}</div>
-    <div class="card box"><h3>Por tipo de receita</h3><p class="d">Maiores categorias</p>${A.receita_por_categoria.slice(0,10).map(r=>`<div class="hb"><div class="t"><span>${esc(semCodigo(r.categoria))}</span><b>${curto(r.valor)}</b></div><div class="trk"><i style="width:${100*r.valor/(A.receita_por_categoria[0]?.valor||1)}%"></i></div></div>`).join('')}</div></div>
+    <div class="info g"><div class="ib" style="background:var(--acc-d)">i</div><div><h4>Como a prefeitura ganha dinheiro?</h4><p>Uma parte vem de impostos que os moradores pagam direto à prefeitura, como o IPTU (das casas) e o ISS (dos serviços). A maior parte vem de uma fatia dos impostos que o Governo do Estado e o Governo Federal cobram e depois repassam para a cidade.</p></div></div>
+    <div class="g2"><div class="card box"><h3>De onde veio o dinheiro</h3><p class="d">Total que entrou no ano</p>${donut(A.receita_por_fonte.map(r=>({n:simples(r.fonte),v:r.valor})))}${F_TCE}</div>
+    <div class="card box"><h3>Os maiores impostos e repasses</h3><p class="d">O que mais trouxe dinheiro</p>${A.receita_por_categoria.slice(0,10).map(r=>`<div class="hb"><div class="t"><span>${esc(simples(r.categoria))}</span><b>${curto(r.valor)}</b></div><div class="trk"><i style="width:${100*r.valor/(A.receita_por_categoria[0]?.valor||1)}%"></i></div></div>`).join('')}${F_TCE}</div></div>
   </section>`;
   $('#f-tipo').onchange=$('#f-grav').onchange=()=>{limAl=12;tabAlertas()};$('#busca-forn').oninput=()=>{limF=20;tabFornecedores()};
   tabAlertas();tabFornecedores();irPara(aba);
 }
 function selo(of){
-  const NOME={receita:'Receita arrecadada',empenhado:'Despesa empenhada',pago:'Despesa paga'};
-  if(!of)return `<div class="selo na"><div class="sb" style="background:var(--mute)">?</div><div><h4>Ainda não conferido com o Tesouro Nacional</h4><p>O relatório fiscal oficial (RREO) desta cidade ainda não está disponível no Siconfi.</p></div></div>`;
-  const per=`até o ${of.periodo}º bimestre (jan–${['','','fev','','abr','','jun','','ago','','out','','dez'][of.mes_final]})`;
-  const tab=`<details><summary>Ver a comparação</summary><div class="tw"><table><tr><th></th><th class="n">Calculado (TCE-SP)</th><th class="n">Oficial (Tesouro)</th><th class="n">Diferença</th></tr>${Object.entries(of.itens).map(([k,v])=>`<tr><td>${NOME[k]}</td><td class="n">${brl(v.calculado)}</td><td class="n">${brl(v.tesouro)}</td><td class="n">${v.diferenca_pct===0?'0':v.diferenca_pct.toLocaleString('pt-BR')}%</td></tr>`).join('')}</table></div><p style="margin-top:6px">Fonte oficial: Relatório Resumido da Execução Orçamentária (RREO, Anexo 1) entregue pela prefeitura ao Tesouro Nacional, sistema Siconfi. Consulte em <a href="https://siconfi.tesouro.gov.br" target="_blank" rel="noopener">siconfi.tesouro.gov.br</a>.</p></details>`;
+  const NOME={receita:'Dinheiro que entrou',empenhado:'Prometido',pago:'Já pago'};
+  if(!of)return `<div class="selo na"><div class="sb" style="background:var(--mute)">?</div><div><h4>Ainda não conferido</h4><p>O Governo Federal ainda não publicou o relatório desta cidade para compararmos.</p></div></div>`;
+  const per=`de janeiro até ${['','','fevereiro','','abril','','junho','','agosto','','outubro','','dezembro'][of.mes_final]}`;
+  const tab=`<details><summary>Ver os números</summary><div class="tw"><table><tr><th></th><th class="n">Nossa soma</th><th class="n">Governo Federal</th><th class="n">Diferença</th></tr>${Object.entries(of.itens).map(([k,v])=>`<tr><td>${NOME[k]}</td><td class="n">${brl(v.calculado)}</td><td class="n">${brl(v.tesouro)}</td><td class="n">${v.diferenca_pct===0?'0':v.diferenca_pct.toLocaleString('pt-BR')}%</td></tr>`).join('')}</table></div><p style="margin-top:6px">Fonte oficial: Relatório Resumido da Execução Orçamentária (RREO, Anexo 1) entregue pela prefeitura ao Tesouro Nacional, sistema Siconfi. Consulte em <a href="https://siconfi.tesouro.gov.br" target="_blank" rel="noopener">siconfi.tesouro.gov.br</a>.</p></details>`;
   return of.conferido
-    ?`<div class="selo ok"><div class="sb" style="background:var(--acc-d)">✓</div><div><h4>Números conferidos com o Tesouro Nacional</h4><p>Receita, empenho e pagamento calculados a partir dos dados detalhados do TCE-SP batem com o relatório fiscal oficial da prefeitura ${per}.</p>${tab}</div></div>`
-    :`<div class="selo dif"><div class="sb" style="background:var(--amb)">!</div><div><h4>Diferença entre TCE-SP e Tesouro Nacional</h4><p>Os totais calculados a partir do TCE-SP diferem dos do relatório fiscal oficial ${per}. Diferenças entre os dois sistemas costumam decorrer de datas de atualização, ajustes contábeis ou critérios distintos de registro.</p>${tab}</div></div>`}
+    ?`<div class="selo ok"><div class="sb" style="background:var(--acc-d)">✓</div><div><h4>Conferido: os números batem</h4><p>Somamos tudo o que a prefeitura informou ao Tribunal de Contas e comparamos com o que ela informou ao Governo Federal (Tesouro Nacional). Os totais são iguais ${per}.</p>${tab}</div></div>`
+    :`<div class="selo dif"><div class="sb" style="background:var(--amb)">!</div><div><h4>Os números estão um pouco diferentes</h4><p>O que a prefeitura informou ao Tribunal de Contas não é exatamente igual ao que ela informou ao Governo Federal ${per}. Isso pode acontecer por causa de datas diferentes de atualização ou de acertos na contabilidade.</p>${tab}</div></div>`}
 function kpi(l,v,s,bg,c,path){return `<div class="card kpi"><div class="h"><span>${l}</span><div class="ico" style="background:${bg};color:${c}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg></div></div><div class="v">${v}</div><div class="s">${s}</div></div>`}
 function grafMensal(){
   const m=A.por_mes,max=Math.max(...m.flatMap(x=>[x.receita,x.empenhado,x.pago]),1);
-  return `<div class="chart">${m.map(x=>`<div class="mc" title="${x.mes}\nArrecadado: ${brl(x.receita)}\nEmpenhado: ${brl(x.empenhado)}\nPago: ${brl(x.pago)}"><i style="height:${100*x.receita/max}%;background:#059669"></i><i style="height:${100*Math.max(x.empenhado,0)/max}%;background:#93c5fd"></i><i style="height:${100*x.pago/max}%;background:#2563eb"></i></div>`).join('')}</div>
+  return `<div class="chart">${m.map(x=>`<div class="mc" title="${x.mes}\nEntrou: ${brl(x.receita)}\nPrometido: ${brl(x.empenhado)}\nPago: ${brl(x.pago)}"><i style="height:${100*x.receita/max}%;background:#059669"></i><i style="height:${100*Math.max(x.empenhado,0)/max}%;background:#93c5fd"></i><i style="height:${100*x.pago/max}%;background:#2563eb"></i></div>`).join('')}</div>
   <div class="mlab">${m.map(x=>`<span>${x.mes}</span>`).join('')}</div>
-  <div class="leg"><span><b style="background:#059669"></b>Arrecadado</span><span><b style="background:#93c5fd"></b>Empenhado</span><span><b style="background:#2563eb"></b>Pago</span></div>`}
+  <div class="leg"><span><b style="background:#059669"></b>Entrou</span><span><b style="background:#93c5fd"></b>Prometido</span><span><b style="background:#2563eb"></b>Pago</span></div>${F_TCE}`}
 function donut(itens){
   itens=itens.filter(i=>i.v>0);const tot=itens.reduce((s,i)=>s+i.v,0)||1;
   let top=itens.slice(0,6);if(itens.length>6)top.push({n:'Outros',v:itens.slice(6).reduce((s,i)=>s+i.v,0)});
@@ -288,15 +318,15 @@ function tabAlertas(){
   $('#lista-alertas').innerHTML=l.slice(0,limAl).map(x=>{const i=A.alertas.indexOf(x);return `<div class="card al ${x.gravidade}">
     <div class="top"><span class="chip">${TIPOS[x.tipo]||x.tipo}</span><span><span class="chip">${RELEV[x.gravidade]}</span>${x.mes?` <span class="chip">${x.mes}</span>`:''}</span></div>
     <h4>${esc(x.titulo)}</h4>${x.fornecedor?`<div class="who">${esc(x.fornecedor)} · <span class="doc">${esc(x.doc)}</span></div>`:''}
-    <p class="ex">${esc(x.explicacao)}</p><p style="margin:0;font-size:11.5px;color:var(--mute)">Informação estatística. Não indica irregularidade.</p>${x.empenhos?`<div class="emp">Empenhos: ${x.empenhos.map(esc).join(', ')}</div>`:''}
-    <div class="act"><button class="btn" onclick="copiarAlerta(${i})">Copiar resumo</button><button class="btn pri" onclick="esicAlerta(${i})">Pedir informações (e-SIC)</button></div></div>`}).join('')||'<div class="card vazio">Nenhum alerta com esses filtros.</div>';
+    <p class="ex">${esc(x.explicacao)}</p><p style="margin:0;font-size:11.5px;color:var(--mute)">Isso não quer dizer que há algo errado. Fonte: Tribunal de Contas do Estado de SP.</p>${x.empenhos?`<div class="emp">Números das compras: ${x.empenhos.map(esc).join(', ')}</div>`:''}
+    <div class="act"><button class="btn" onclick="copiarAlerta(${i})">Copiar resumo</button><button class="btn pri" onclick="esicAlerta(${i})">Pedir informação à prefeitura</button></div></div>`}).join('')||'<div class="card vazio">Nenhum alerta com esses filtros.</div>';
   $('#mais-al').innerHTML=l.length>limAl?`<button class="mais" onclick="limAl+=12;tabAlertas()">Mostrar mais ${Math.min(12,l.length-limAl)} de ${l.length-limAl} restantes</button>`:''}
 function fornFiltrados(){const q=($('#busca-forn')?.value||'').toLowerCase().replace(/[.\-\/]/g,'');return A.top_fornecedores.map((f,i)=>({...f,i})).filter(f=>!q||f.nome.toLowerCase().includes(q)||f.doc.replace(/[.\-\/]/g,'').includes(q))}
 function tabFornecedores(){
   const l=fornFiltrados();
-  $('#tb-forn').innerHTML=l.slice(0,limF).map(f=>`<tr class="cl" onclick="fichaFornecedor(${f.i})"><td><span class="rk">${f.i+1}</span></td><td><div class="nm">${esc(f.nome)}</div><div class="doc">${esc(f.doc)}${f.ente_publico?' · <b>órgão público / encargo / repasse</b>':''}</div></td><td class="n"><b>${brl(f.pago)}</b></td><td class="n hide-m">${brl(f.empenhado)}</td><td class="n"><span class="pct">${f.participacao.toLocaleString('pt-BR')}%</span></td><td class="n hide-m">${f.empenhos}</td></tr>`).join('')||'<tr><td colspan="6" class="vazio">Nenhum fornecedor encontrado.</td></tr>';
+  $('#tb-forn').innerHTML=l.slice(0,limF).map(f=>`<tr class="cl" onclick="fichaFornecedor(${f.i})"><td><span class="rk">${f.i+1}</span></td><td><div class="nm">${esc(f.nome)}</div><div class="doc">${esc(f.doc)}${f.ente_publico?' · <b>não é empresa: é órgão público, imposto ou previdência</b>':''}</div></td><td class="n"><b>${brl(f.pago)}</b></td><td class="n hide-m">${brl(f.empenhado)}</td><td class="n"><span class="pct">${f.participacao.toLocaleString('pt-BR')}%</span></td><td class="n hide-m">${f.empenhos}</td></tr>`).join('')||'<tr><td colspan="6" class="vazio">Nenhum fornecedor encontrado.</td></tr>';
   $('#mais-f').innerHTML=l.length>limF?`<button class="mais" style="margin:0;border:0;border-top:1px solid var(--line);border-radius:0" onclick="limF+=20;tabFornecedores()">Mostrar mais</button>`:'';
-  $('#info-forn').textContent=`Mostrando ${Math.min(l.length,limF)} de ${l.length} dos ${A.top_fornecedores.length} maiores recebedores (de ${A.totais.fornecedores} no total)`}
+  $('#info-forn').textContent=`Mostrando ${Math.min(l.length,limF)} de ${l.length} (há ${A.totais.fornecedores.toLocaleString('pt-BR')} no total)`}
 
 function abrir(t,s,corpo,rodape){$('#m-t').textContent=t;$('#m-s').textContent=s;$('#m-b').innerHTML=corpo;$('#m-f').innerHTML=rodape;$('#modal').classList.add('on')}
 function fechar(){$('#modal').classList.remove('on')}
@@ -305,10 +335,10 @@ $('#modal').onclick=e=>{if(e.target.id==='modal')fechar()};addEventListener('key
 function fichaFornecedor(i){
   const f=A.top_fornecedores[i],als=A.alertas.filter(a=>a.doc===f.doc);
   abrir(f.nome,`${f.doc} · ${D.nome} · ${$('#ano').value}`,`
-    <div class="steps"><div class="on"><b>${curto(f.empenhado)}</b><span>1. Empenhado<br>verba reservada</span></div><div class="on"><b>${f.empenhos}</b><span>2. Empenhos<br>emitidos</span></div><div class="on"><b>${curto(f.pago)}</b><span>3. Pago<br>dinheiro saiu</span></div></div>
-    <div class="note">Participação nos pagamentos do ano: <b>${f.participacao.toLocaleString('pt-BR')}%</b> do total pago pela prefeitura.${f.ente_publico?' É um órgão público, encargo ou repasse (folha, previdência, tributos), não uma empresa contratada.':f.pessoa_fisica?' Pessoa física: nome e documento não são exibidos (LGPD).':''}</div>
-    <div><b style="font-size:13px">Pontos de atenção estatísticos (${als.length})</b>${als.length?als.map(a=>`<div class="hb" style="margin-top:8px"><span class="chip">${TIPOS[a.tipo]||a.tipo}</span> <span style="font-size:13px">${esc(a.titulo)}</span></div>`).join(''):'<p class="d" style="color:var(--mute);font-size:13px;margin:6px 0 0">Nenhum.</p>'}</div>`,
-    `<button class="btn" onclick="fechar()">Fechar</button><button class="btn pri" onclick="esicFornecedor(${i})">Gerar pedido de informação</button>`)}
+    <div class="steps"><div class="on"><b>${curto(f.empenhado)}</b><span>Prometido<br>no ano</span></div><div class="on"><b>${f.empenhos}</b><span>Número<br>de compras</span></div><div class="on"><b>${curto(f.pago)}</b><span>Já<br>pago</span></div></div>
+    <div class="note">Recebeu <b>${f.participacao.toLocaleString('pt-BR')}%</b> de todo o dinheiro que a prefeitura pagou no ano.${f.ente_publico?' Não é uma empresa: é a própria prefeitura (salários), a previdência dos funcionários, um banco ou um imposto.':f.pessoa_fisica?' É uma pessoa, não uma empresa. Por lei, o nome dela não é mostrado.':''}</div>
+    <div><b style="font-size:13px">Números que chamam atenção (${als.length})</b>${als.length?als.map(a=>`<div class="hb" style="margin-top:8px"><span class="chip">${TIPOS[a.tipo]||a.tipo}</span> <span style="font-size:13px">${esc(a.titulo)}</span></div>`).join(''):'<p class="d" style="color:var(--mute);font-size:13px;margin:6px 0 0">Nenhum.</p>'}</div>${F_TCE}`,
+    `<button class="btn" onclick="fechar()">Fechar</button><button class="btn pri" onclick="esicFornecedor(${i})">Pedir informação à prefeitura</button>`)}
 
 function minuta(assunto,itens,pedidos){
   return `À Ouvidoria / Serviço de Informação ao Cidadão (e-SIC) do Município de ${D.nome.replace(/\s*\(.*\)/,'')} - SP
@@ -326,8 +356,8 @@ Peço o envio em formato digital, no prazo do art. 11 da Lei 12.527/2011 (até 2
 
 Atenciosamente,
 [seu nome]`}
-function mostrarMinuta(txt){abrir('Pedido de informação (e-SIC)','Baseado na Lei de Acesso à Informação · edite antes de enviar',`<textarea id="minuta">${esc(txt)}</textarea><div class="note"><b>Como enviar:</b> copie o texto, entre no e-SIC ou na Ouvidoria do site da prefeitura e cole no pedido. A prefeitura tem até 20 dias para responder (prorrogáveis por mais 10). Guarde o número do protocolo.</div>`,
-  `<button class="btn" onclick="fechar()">Fechar</button><button class="btn pri" onclick="copiar($('#minuta').value,'Pedido copiado! Cole no e-SIC da prefeitura.')">Copiar pedido</button>`)}
+function mostrarMinuta(txt){abrir('Pedir informação à prefeitura','Texto pronto. Você pode mudar o que quiser antes de enviar.',`<textarea id="minuta">${esc(txt)}</textarea><div class="note"><b>Como fazer:</b> 1) toque em "Copiar texto". 2) Entre no site da prefeitura e procure "e-SIC", "Ouvidoria" ou "Acesso à Informação". 3) Cole o texto e envie. A prefeitura tem até 20 dias para responder (pode pedir mais 10). Anote o número do pedido. Isso é um direito de todo cidadão e é de graça.</div>`,
+  `<button class="btn" onclick="fechar()">Fechar</button><button class="btn pri" onclick="copiar($('#minuta').value,'Texto copiado! Agora cole no site da prefeitura.')">Copiar texto</button>`)}
 function esicFornecedor(i){const f=A.top_fornecedores[i];mostrarMinuta(minuta(`Despesas com ${f.nome} no exercício de ${$('#ano').value}`,
   [`- Fornecedor: ${f.nome} (${f.doc})`,`- Total pago no exercício: ${brl(f.pago)} em ${f.empenhos} empenhos`,`- Fonte dos dados: Portal da Transparência Municipal do TCE-SP`],
   ['Relação dos contratos, atas de registro de preços e processos de compra (com modalidade de licitação) que deram origem a esses pagamentos;','Cópia dos contratos e eventuais termos aditivos;','Notas fiscais e documentos de atesto/recebimento assinados pelo fiscal do contrato.']))}
