@@ -156,6 +156,9 @@ def arquivos(pasta: Path, tipo: str):
     return [por_mes[k] for k in sorted(por_mes)]
 
 
+DESATIVADOS: set = set()
+
+
 def processar_cidade(slug: str, nome: str, limites: dict):
     pasta = RAIZ / "dados" / slug
     desp, rec = [], []
@@ -396,6 +399,7 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
                 "explicacao": "Contratação pontual de valor alto. Confira na Receita Federal a data de abertura e a atividade da empresa.",
             })
 
+    alertas = [a for a in alertas if a["tipo"] not in DESATIVADOS]
     ordem = {"alta": 0, "media": 1, "baixa": 2}
     alertas.sort(key=lambda a: (ordem[a["gravidade"]], -a.get("valor", 0)))
     return alertas[:150]
@@ -404,6 +408,7 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
 def main():
     cfg = yaml.safe_load((RAIZ / "cidades.yaml").read_text(encoding="utf-8"))
     limites = {int(k): float(v) for k, v in cfg.get("limite_dispensa", {}).items()}
+    DESATIVADOS.update(cfg.get("alertas_desativados") or [])
     resolvidas = RAIZ / "dados" / "cidades.json"
     cidades = (json.loads(resolvidas.read_text(encoding="utf-8")) if resolvidas.exists()
                else [{"slug": c["slug"], "nome": c["nome"]} for c in cfg["cidades"] if c.get("slug")])

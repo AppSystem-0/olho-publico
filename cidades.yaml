@@ -39,3 +39,8 @@ anos: [2025, 2026]
 limite_dispensa:
   2025: 62725.59
   2026: 62725.59
+
+# Tipos de alerta desligados no site. "fracionamento" fica desligado até o PNCP
+# confirmar a modalidade de cada compra (evita falso positivo com entregas de atas
+# de registro de preços e contratos já licitados).
+alertas_desativados: [fracionamento]
