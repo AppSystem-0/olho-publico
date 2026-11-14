@@ -1,0 +1,10 @@
+name: Sonda Siconfi
+on: workflow_dispatch
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install requests
+      - run: python coletor/sonda_siconfi.py
