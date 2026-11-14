@@ -4,6 +4,8 @@
 cidades:
   - slug: leme
     nome: Leme
+  - slug: santa-cruz-da-conceicao
+    nome: Santa Cruz da Conceição
   # - slug: araras
   #   nome: Araras
   # - slug: pirassununga
