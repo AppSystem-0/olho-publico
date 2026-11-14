@@ -10,7 +10,7 @@
 :root{--bg:#f6f7f9;--card:#fff;--ink:#0f172a;--ink2:#334155;--mute:#64748b;--line:#e2e8f0;--soft:#f1f5f9;
 --acc:#059669;--acc-d:#047857;--acc-s:#ecfdf5;--red:#dc2626;--red-s:#fef2f2;--amb:#d97706;--amb-s:#fffbeb;--blue:#2563eb;--r:16px;--sh:0 1px 2px rgba(15,23,42,.04),0 4px 16px rgba(15,23,42,.05)}
 @media (prefers-color-scheme:dark){:root{--bg:#0b1120;--card:#111827;--ink:#f1f5f9;--ink2:#cbd5e1;--mute:#94a3b8;--line:#1f2937;--soft:#1e293b;--acc:#34d399;--acc-d:#10b981;--acc-s:#052e22;--red:#f87171;--red-s:#2a1215;--amb:#fbbf24;--amb-s:#2a1f08;--sh:none}}
-*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}html,body{overflow-x:hidden}.card,.g2>*,.kpis>*,.panel{min-width:0}
 body{margin:0;font:14px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 button,select,input,textarea{font:inherit;color:inherit}
 .wrap{max-width:1180px;margin:auto;padding:0 18px}
@@ -28,7 +28,7 @@ nav .wrap{display:flex;align-items:center;gap:14px;height:62px}
 .search input{width:100%;padding:9px 12px 9px 36px;border:1px solid var(--line);border-radius:10px;background:var(--soft);outline:none}
 .search input:focus{border-color:var(--acc);background:var(--card);box-shadow:0 0 0 3px var(--acc-s)}
 .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--mute)}
-.sel{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-weight:600}
+.sel{min-width:0;max-width:100%;text-overflow:ellipsis;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-weight:600}
 .btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);padding:8px 12px;border-radius:10px;font-weight:600;font-size:12.5px;cursor:pointer;white-space:nowrap}
 .btn:hover{background:var(--soft)}.btn.pri{background:var(--acc-d);border-color:var(--acc-d);color:#fff}.btn.pri:hover{filter:brightness(1.08)}
 .btn.amb{background:var(--amb);border-color:var(--amb);color:#fff}
@@ -44,7 +44,7 @@ nav .wrap{display:flex;align-items:center;gap:14px;height:62px}
 .kpi .v{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-top:6px}
 .kpi .s{font-size:12px;color:var(--mute);margin-top:2px}
 .kpi.warn{border-color:#fcd34d;background:linear-gradient(var(--amb-s),var(--card))}.kpi.warn .v{color:var(--amb)}
-.tabs{display:flex;gap:4px;overflow-x:auto;padding:5px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:16px;scrollbar-width:none}
+.tabs{position:sticky;top:62px;z-index:15;display:flex;gap:4px;overflow-x:auto;padding:5px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:16px;scrollbar-width:none}
 .tabs button{border:0;background:none;padding:9px 14px;border-radius:10px;font-weight:600;color:var(--mute);cursor:pointer;white-space:nowrap;display:flex;gap:7px;align-items:center}
 .tabs button.on{background:var(--acc-s);color:var(--acc-d)}
 .badge{font-size:11px;padding:1px 7px;border-radius:99px;background:var(--soft);color:var(--ink2);font-weight:700}
@@ -109,8 +109,43 @@ footer a{color:#94a3b8;text-decoration:none;display:block;padding:2px 0}footer a
 .selo .sb{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex-shrink:0}
 .selo>div:last-child{min-width:0;flex:1}.selo .tw{overflow-x:auto;margin:0 -4px}.selo h4{margin:0 0 2px;font-size:13.5px}.selo p{margin:0;color:var(--ink2)}.selo details{margin-top:6px}.selo summary{cursor:pointer;color:var(--acc-d);font-weight:600}
 .selo table{margin-top:6px;font-size:12px}.selo td,.selo th{padding:5px 8px;background:none}
+.mais{display:block;width:100%;margin-top:12px;padding:12px;border:1px dashed var(--line);border-radius:12px;background:var(--card);font-weight:600;color:var(--acc-d);cursor:pointer}
 .vazio{padding:50px 20px;text-align:center;color:var(--mute)}
-@media(max-width:640px){.search{display:none}.logo small{display:none}.logo b{font-size:15px}nav .sel{padding:7px 6px;font-size:13px}nav .wrap{gap:8px}.hide-m{display:none}.hero{padding:20px}nav .wrap{height:58px}}
+@media(max-width:640px){
+  body{font-size:14px}
+  .wrap{padding:0 12px}
+  .search{display:none}.hide-m{display:none}
+  nav .wrap{height:56px;gap:8px}
+  .logo{gap:7px}.logo .ic{width:32px;height:32px}.logo .ic svg{width:17px}.logo small{display:none}.logo b{font-size:14px}
+  #cidade{flex:1}
+  nav .sel{padding:7px 6px;font-size:13.5px}
+  .topbar{font-size:11px}.topbar .wrap>span:first-child{display:none}
+  .hero{padding:16px 16px 18px;margin:12px 0;border-radius:16px}
+  .hero h1{font-size:21px;margin:8px 0 4px}.hero p{font-size:13px}.hero .pill{display:none}
+  .kpis{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+  .kpi{padding:12px}.kpi .h{font-size:10.5px;letter-spacing:.02em}.kpi .ico{display:none}
+  .kpi .v{font-size:19px;margin-top:4px}.kpi .s{font-size:11px;line-height:1.35}
+  .tabs{top:56px;border-radius:12px;margin:0 -2px 12px;padding:4px}
+  .tabs button{padding:8px 11px;font-size:13px}
+  .box{padding:14px}
+  .chart{height:160px;gap:3px}.mc{gap:1px}.mlab span{font-size:9.5px}
+  .donut{gap:12px}.donut svg{width:110px;height:110px}
+  .alerts{grid-template-columns:1fr}
+  .al{padding:13px}.al .act{flex-direction:column}.al .act .btn{justify-content:center}
+  td,th{padding:9px 8px}
+  #p-forn thead{display:none}
+  #p-forn tr.cl{display:grid;grid-template-columns:28px 1fr auto;column-gap:10px;row-gap:3px;padding:12px;border-top:1px solid var(--line);align-items:center}
+  #p-forn tr.cl td{border:0;padding:0;background:none}
+  #p-forn tr.cl td:nth-child(1){grid-row:1/span 2;align-self:start}
+  #p-forn tr.cl td:nth-child(2){grid-column:2/span 2}
+  #p-forn tr.cl td:nth-child(3){grid-column:2;text-align:left;font-size:13px}
+  #p-forn tr.cl td:nth-child(5){grid-column:3;grid-row:2}
+  #p-forn .nm{font-size:13.5px;line-height:1.3}
+  .modal{padding:0;align-items:flex-end}.mbox{max-width:none;border-radius:20px 20px 0 0;max-height:92vh}
+  .mf{flex-direction:column-reverse}.mf .btn{justify-content:center;width:100%}
+  .selo{padding:12px}.selo h4{font-size:13px}.selo p{font-size:12.5px}
+  footer{padding:24px 0}
+}
 </style>
 </head>
 <body>
@@ -145,9 +180,10 @@ const $=s=>document.querySelector(s);
 const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const curto=v=>{const a=Math.abs(v),f=(n,d)=>n.toLocaleString('pt-BR',{maximumFractionDigits:d});return a>=1e9?'R$ '+f(v/1e9,2)+' bi':a>=1e6?'R$ '+f(v/1e6,1)+' mi':a>=1e3?'R$ '+f(v/1e3,0)+' mil':brl(v)};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const semCodigo=t=>String(t??'').replace(/^\s*[\d.]+\s*-\s*/,'');
 const TIPOS={fracionamento:'Possível fracionamento',concentracao:'Concentração',anulacoes:'Anulações',pico_dezembro:'Pico de fim de ano',fornecedor_pontual:'Fornecedor pontual'};
 const CORES=['#059669','#2563eb','#d97706','#7c3aed','#db2777','#0891b2','#65a30d','#94a3b8'];
-let D=null,A=null,aba='geral';
+let D=null,A=null,aba='geral',limAl=12,limF=20;
 
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._);t._=setTimeout(()=>t.classList.remove('on'),2600)}
 function copiar(txt,msg){(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).catch(()=>{const a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}).finally(()=>toast(msg))}
@@ -175,7 +211,7 @@ async function trocarCidade(){
   if(!window.DADOS)history.replaceState(null,'','?cidade='+D.slug);
   render();
 }
-function irPara(t){aba=t;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+t))}
+function irPara(t,rolar){aba=t;if(rolar){const tb=document.querySelector('.tabs');if(tb&&tb.getBoundingClientRect().top<0)tb.scrollIntoView({behavior:'smooth'})}document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+t))}
 
 function render(){
   const t=A.totais,al=A.alertas,altos=al.filter(x=>x.gravidade==='alta').length;
@@ -184,17 +220,17 @@ function render(){
   $('#app').innerHTML=`
   ${selo(of)}
   <section class="kpis">
-    ${kpi('Arrecadado no ano',curto(t.receita),pop?`${brl(t.receita/pop).replace(/,\d+$/,'')} por habitante · ${pop.toLocaleString('pt-BR')} hab.`:'Receitas de todas as fontes','#ecfdf5','#059669','M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6')}
+    ${kpi('Arrecadado',curto(t.receita),pop?`${brl(t.receita/pop).replace(/,\d+$/,'')} por habitante · ${pop.toLocaleString('pt-BR')} hab.`:'Receitas de todas as fontes','#ecfdf5','#059669','M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6')}
     ${kpi('Empenhado',curto(t.empenhado),'Dinheiro reservado para gastos','#eff6ff','#2563eb','M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11')}
     ${kpi('Efetivamente pago',curto(t.pago),exec+'% do que foi arrecadado','#f5f3ff','#7c3aed','M2 7h20v10H2zM6 12h.01M18 12h.01M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0')}
-    <div class="card kpi warn" style="cursor:pointer" onclick="irPara('alertas')"><div class="h"><span>Alertas de auditoria</span><div class="ico" style="background:#fef3c7;color:#b45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></div></div>
+    <div class="card kpi warn" style="cursor:pointer" onclick="irPara('alertas')"><div class="h"><span>Alertas</span><div class="ico" style="background:#fef3c7;color:#b45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></div></div>
       <div class="v">${al.length} indícios</div><div class="s">${altos} para conferir primeiro · ver lista →</div></div>
   </section>
   <div class="tabs">
-    <button data-t="geral" class="on" onclick="irPara('geral')">Visão geral</button>
-    <button data-t="alertas" onclick="irPara('alertas')">Alertas <span class="badge">${al.length}</span></button>
-    <button data-t="forn" onclick="irPara('forn')">Quem recebe <span class="badge">${t.fornecedores}</span></button>
-    <button data-t="rec" onclick="irPara('rec')">De onde vem</button>
+    <button data-t="geral" class="on" onclick="irPara('geral',1)">Visão geral</button>
+    <button data-t="alertas" onclick="irPara('alertas',1)">Alertas <span class="badge">${al.length}</span></button>
+    <button data-t="forn" onclick="irPara('forn',1)">Quem recebe <span class="badge">${t.fornecedores}</span></button>
+    <button data-t="rec" onclick="irPara('rec',1)">De onde vem</button>
   </div>
   <section class="panel on" id="p-geral">
     <div class="g2">
@@ -210,19 +246,19 @@ function render(){
     <div class="filters"><select id="f-tipo" class="sel"><option value="">Todos os tipos</option>${[...new Set(al.map(x=>x.tipo))].map(x=>`<option value="${x}">${TIPOS[x]||x}</option>`).join('')}</select>
       <select id="f-grav" class="sel"><option value="">Toda prioridade</option><option value="alta">Conferir primeiro</option><option value="media">Prioridade média</option><option value="baixa">Prioridade baixa</option></select>
       <button class="btn" onclick="exportarAlertas()">⬇ Exportar CSV</button></div>
-    <div class="alerts" id="lista-alertas"></div>
+    <div class="alerts" id="lista-alertas"></div><div id="mais-al"></div>
   </section>
   <section class="panel" id="p-forn">
     <div class="filters"><input id="busca-forn" class="sel" style="flex:1;min-width:200px;font-weight:400" placeholder="Filtrar por nome ou CNPJ…"><button class="btn pri" onclick="exportarFornecedores()">⬇ Exportar CSV</button></div>
-    <div class="card"><div class="tbl"><table><thead><tr><th>#</th><th>Fornecedor</th><th class="n">Pago</th><th class="n hide-m">Empenhado</th><th class="n">% do total</th><th class="n hide-m">Empenhos</th></tr></thead><tbody id="tb-forn"></tbody></table></div>
+    <div class="card"><div class="tbl"><table><thead><tr><th>#</th><th>Fornecedor</th><th class="n">Pago</th><th class="n hide-m">Empenhado</th><th class="n">% do total</th><th class="n hide-m">Empenhos</th></tr></thead><tbody id="tb-forn"></tbody></table></div><div id="mais-f"></div>
     <div class="tfoot"><span id="info-forn"></span><span>Toque numa linha para ver a ficha</span></div></div>
   </section>
   <section class="panel" id="p-rec">
     <div class="info g"><div class="ib" style="background:var(--acc-d)">i</div><div><h4>De onde vem o dinheiro</h4><p>A prefeitura vive de impostos próprios (IPTU, ISS, taxas) e, principalmente, de repasses do Estado (ICMS, IPVA) e da União (FPM, SUS, Fundeb).</p></div></div>
-    <div class="g2"><div class="card box"><h3>Por fonte de recurso</h3><p class="d">Total arrecadado no ano</p>${donut(A.receita_por_fonte.map(r=>({n:r.fonte,v:r.valor})))}</div>
-    <div class="card box"><h3>Por tipo de receita</h3><p class="d">Maiores categorias</p>${A.receita_por_categoria.slice(0,10).map(r=>`<div class="hb"><div class="t"><span>${esc(r.categoria)}</span><b>${curto(r.valor)}</b></div><div class="trk"><i style="width:${100*r.valor/(A.receita_por_categoria[0]?.valor||1)}%"></i></div></div>`).join('')}</div></div>
+    <div class="g2"><div class="card box"><h3>Por fonte de recurso</h3><p class="d">Total arrecadado no ano</p>${donut(A.receita_por_fonte.map(r=>({n:semCodigo(r.fonte),v:r.valor})))}</div>
+    <div class="card box"><h3>Por tipo de receita</h3><p class="d">Maiores categorias</p>${A.receita_por_categoria.slice(0,10).map(r=>`<div class="hb"><div class="t"><span>${esc(semCodigo(r.categoria))}</span><b>${curto(r.valor)}</b></div><div class="trk"><i style="width:${100*r.valor/(A.receita_por_categoria[0]?.valor||1)}%"></i></div></div>`).join('')}</div></div>
   </section>`;
-  $('#f-tipo').onchange=$('#f-grav').onchange=tabAlertas;$('#busca-forn').oninput=tabFornecedores;
+  $('#f-tipo').onchange=$('#f-grav').onchange=()=>{limAl=12;tabAlertas()};$('#busca-forn').oninput=()=>{limF=20;tabFornecedores()};
   tabAlertas();tabFornecedores();irPara(aba);
 }
 function selo(of){
@@ -250,16 +286,18 @@ function donut(itens){
 function alertasFiltrados(){const t=$('#f-tipo')?.value,g=$('#f-grav')?.value;return A.alertas.filter(x=>(!t||x.tipo===t)&&(!g||x.gravidade===g))}
 function tabAlertas(){
   const l=alertasFiltrados();
-  $('#lista-alertas').innerHTML=l.slice(0,80).map(x=>{const i=A.alertas.indexOf(x);return `<div class="card al ${x.gravidade}">
+  $('#lista-alertas').innerHTML=l.slice(0,limAl).map(x=>{const i=A.alertas.indexOf(x);return `<div class="card al ${x.gravidade}">
     <div class="top"><span class="chip">${TIPOS[x.tipo]||x.tipo}</span><span><span class="chip ${x.gravidade}">conferir: ${x.gravidade==='media'?'média':x.gravidade}</span>${x.mes?` <span class="chip">${x.mes}</span>`:''}</span></div>
     <h4>${esc(x.titulo)}</h4>${x.fornecedor?`<div class="who">${esc(x.fornecedor)} · <span class="doc">${esc(x.doc)}</span></div>`:''}
     <p class="ex">${esc(x.explicacao)}</p>${x.empenhos?`<div class="emp">Empenhos: ${x.empenhos.map(esc).join(', ')}</div>`:''}
-    <div class="act"><button class="btn" onclick="copiarAlerta(${i})">Copiar resumo</button><button class="btn amb" onclick="esicAlerta(${i})">Pedir documentos (e-SIC)</button></div></div>`}).join('')||'<div class="card vazio">Nenhum alerta com esses filtros.</div>'}
+    <div class="act"><button class="btn" onclick="copiarAlerta(${i})">Copiar resumo</button><button class="btn amb" onclick="esicAlerta(${i})">Pedir documentos (e-SIC)</button></div></div>`}).join('')||'<div class="card vazio">Nenhum alerta com esses filtros.</div>';
+  $('#mais-al').innerHTML=l.length>limAl?`<button class="mais" onclick="limAl+=12;tabAlertas()">Mostrar mais ${Math.min(12,l.length-limAl)} de ${l.length-limAl} restantes</button>`:''}
 function fornFiltrados(){const q=($('#busca-forn')?.value||'').toLowerCase().replace(/[.\-\/]/g,'');return A.top_fornecedores.map((f,i)=>({...f,i})).filter(f=>!q||f.nome.toLowerCase().includes(q)||f.doc.replace(/[.\-\/]/g,'').includes(q))}
 function tabFornecedores(){
   const l=fornFiltrados();
-  $('#tb-forn').innerHTML=l.map(f=>`<tr class="cl" onclick="fichaFornecedor(${f.i})"><td><span class="rk">${f.i+1}</span></td><td><div class="nm">${esc(f.nome)}</div><div class="doc">${esc(f.doc)}${f.ente_publico?' · <b>órgão público / encargo / repasse</b>':''}</div></td><td class="n"><b>${brl(f.pago)}</b></td><td class="n hide-m">${brl(f.empenhado)}</td><td class="n"><span class="pct">${f.participacao.toLocaleString('pt-BR')}%</span></td><td class="n hide-m">${f.empenhos}</td></tr>`).join('')||'<tr><td colspan="6" class="vazio">Nenhum fornecedor encontrado.</td></tr>';
-  $('#info-forn').textContent=`Mostrando ${l.length} dos ${A.top_fornecedores.length} maiores recebedores (de ${A.totais.fornecedores} no total)`}
+  $('#tb-forn').innerHTML=l.slice(0,limF).map(f=>`<tr class="cl" onclick="fichaFornecedor(${f.i})"><td><span class="rk">${f.i+1}</span></td><td><div class="nm">${esc(f.nome)}</div><div class="doc">${esc(f.doc)}${f.ente_publico?' · <b>órgão público / encargo / repasse</b>':''}</div></td><td class="n"><b>${brl(f.pago)}</b></td><td class="n hide-m">${brl(f.empenhado)}</td><td class="n"><span class="pct">${f.participacao.toLocaleString('pt-BR')}%</span></td><td class="n hide-m">${f.empenhos}</td></tr>`).join('')||'<tr><td colspan="6" class="vazio">Nenhum fornecedor encontrado.</td></tr>';
+  $('#mais-f').innerHTML=l.length>limF?`<button class="mais" style="margin:0;border:0;border-top:1px solid var(--line);border-radius:0" onclick="limF+=20;tabFornecedores()">Mostrar mais</button>`:'';
+  $('#info-forn').textContent=`Mostrando ${Math.min(l.length,limF)} de ${l.length} dos ${A.top_fornecedores.length} maiores recebedores (de ${A.totais.fornecedores} no total)`}
 
 function abrir(t,s,corpo,rodape){$('#m-t').textContent=t;$('#m-s').textContent=s;$('#m-b').innerHTML=corpo;$('#m-f').innerHTML=rodape;$('#modal').classList.add('on')}
 function fechar(){$('#modal').classList.remove('on')}
@@ -269,7 +307,7 @@ function fichaFornecedor(i){
   const f=A.top_fornecedores[i],als=A.alertas.filter(a=>a.doc===f.doc);
   abrir(f.nome,`${f.doc} · ${D.nome} · ${$('#ano').value}`,`
     <div class="steps"><div class="on"><b>${curto(f.empenhado)}</b><span>1. Empenhado<br>verba reservada</span></div><div class="on"><b>${f.empenhos}</b><span>2. Empenhos<br>emitidos</span></div><div class="on"><b>${curto(f.pago)}</b><span>3. Pago<br>dinheiro saiu</span></div></div>
-    <div class="note">Este fornecedor recebeu <b>${f.participacao.toLocaleString('pt-BR')}%</b> de tudo que a prefeitura pagou no ano.${f.pessoa_fisica?' É pessoa física: o CPF aparece mascarado (LGPD).':' Confira a data de abertura e os sócios no cadastro de CNPJ da Receita Federal.'}</div>
+    <div class="note">Este fornecedor recebeu <b>${f.participacao.toLocaleString('pt-BR')}%</b> de tudo que a prefeitura pagou no ano.${f.ente_publico?' É um órgão público, encargo ou repasse (folha, previdência, tributos), não uma empresa contratada.':f.pessoa_fisica?' É pessoa física: o documento não é exibido (LGPD).':' Confira a data de abertura e os sócios no cadastro de CNPJ da Receita Federal.'}</div>
     <div><b style="font-size:13px">Alertas ligados a este fornecedor (${als.length})</b>${als.length?als.map(a=>`<div class="hb" style="margin-top:8px"><span class="chip ${a.gravidade}">${a.gravidade==='media'?'média':a.gravidade}</span> <span style="font-size:13px">${esc(a.titulo)}</span></div>`).join(''):'<p class="d" style="color:var(--mute);font-size:13px;margin:6px 0 0">Nenhum alerta automático.</p>'}</div>`,
     `<button class="btn" onclick="fechar()">Fechar</button><button class="btn pri" onclick="esicFornecedor(${i})">Gerar pedido de informação</button>`)}
 
