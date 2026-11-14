@@ -7,6 +7,7 @@ IMPORTANTE: os alertas são INDÍCIOS para orientar a fiscalização cidadã.
 Não provam irregularidade: cada um traz o motivo e os empenhos de origem
 para que qualquer pessoa confira no documento oficial.
 """
+import html
 import json
 import re
 from collections import defaultdict
@@ -83,7 +84,45 @@ def tipo_evento(ev: str) -> str:
     return "outro"
 
 
+# Entes públicos, previdência, encargos e bancos: aparecem como "fornecedor" mas são
+# folha, repasses ou tributos. Ficam fora dos alertas de concentração/fracionamento.
+ENTES_PUBLICOS = re.compile(
+    r"PREFEITURA|MUNICIPIO DE|CAMARA MUNICIPAL|C[ÂA]MARA MUNICIPAL|PREVID|RPPS|INSS|I\.N\.S\.S|"
+    r"SEGURIDADE|CAIXA ECON|BANCO DO BRASIL|TRIBUNAL|MINIST[EÉ]RIO|RECEITA FEDERAL|FGTS|PASEP|"
+    r"SUPERINT|SAECIL|SAAE|CONS[OÓ]RCIO INTERMUN|CONS\.INTERMUN|FUNDO MUNICIPAL|FUNDO NACIONAL|"
+    r"SECRETARIA DA FAZENDA|ESTADO DE S[AÃ]O PAULO|UNI[AÃ]O FEDERAL|DEPARTAMENTO ESTADUAL|DETRAN",
+    re.I,
+)
+
+
+# Concessionárias de serviço público (tarifa regulada, contratação sem licitação por natureza).
+CONCESSIONARIAS = re.compile(
+    r"ELEKTRO|CPFL|ENEL|SABESP|COMG[AÁ]S|TELEF[OÔ]NICA|TELEFONICA|VIVO|CLARO S|\bOI S|EMBRATEL|CORREIOS|EMPRESA BRASILEIRA DE CORREIOS",
+    re.I,
+)
+
+
+def eh_ente_publico(nome: str) -> bool:
+    return bool(ENTES_PUBLICOS.search(nome or ""))
+
+
+def eh_concessionaria(nome: str) -> bool:
+    return bool(CONCESSIONARIAS.search(nome or ""))
+
+
+def chave_doc(bruto: str) -> str:
+    """TCE-SP manda 'CNPJ - PESSOA JURÍDICA - 46362661000168' ou 'PESSOA FÍSICA - 761326'
+    (para pessoa física o número é um identificador interno do TCE, não o CPF)."""
+    b = str(bruto).upper()
+    dig = re.sub(r"\D", "", b)
+    if "FÍSICA" in b or "FISICA" in b:
+        return "PF" + dig
+    return dig
+
+
 def mascarar(doc: str) -> str:
+    if str(doc).startswith("PF"):
+        return "Pessoa física"
     d = re.sub(r"\D", "", str(doc))
     if len(d) == 11:  # CPF: pessoa física, LGPD -> mascara
         return f"***.{d[3:6]}.{d[6:9]}-**"
@@ -114,8 +153,8 @@ def processar_cidade(slug: str, nome: str, limites: dict):
                 "orgao": str(campo(r, "orgao", "Não informado")).strip(),
                 "tipo": tipo_evento(campo(r, "evento")),
                 "empenho": str(campo(r, "empenho")).strip(),
-                "doc": re.sub(r"\D", "", str(campo(r, "doc"))),
-                "fornecedor": str(campo(r, "fornecedor", "Não informado")).strip().upper(),
+                "doc": chave_doc(campo(r, "doc")),
+                "fornecedor": html.unescape(str(campo(r, "fornecedor", "Não informado"))).strip().upper(),
                 "data": str(campo(r, "data")),
                 "valor": num(campo(r, "valor", 0)),
             })
@@ -184,7 +223,8 @@ def resumo_ano(desp, rec, limite):
         "doc": mascarar(k), "nome": v["nome"], "pago": round(v["pago"], 2),
         "empenhado": round(v["empenhado"], 2), "empenhos": v["n"],
         "participacao": round(100 * v["pago"] / total_pago, 2),
-        "pessoa_fisica": len(k) == 11,
+        "pessoa_fisica": k.startswith("PF") or len(k) == 11,
+        "ente_publico": eh_ente_publico(v["nome"]),
     } for k, v in top]
 
     orgaos = defaultdict(float)
@@ -220,54 +260,78 @@ def brl(v):
     return f"R$ {v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
+def privado(chave, nome):
+    """Fornecedor privado pessoa jurídica (exclui PF e entes públicos/encargos)."""
+    return (not str(chave).startswith("PF") and len(str(chave)) != 11
+            and not eh_ente_publico(nome) and not eh_concessionaria(nome))
+
+
 def gerar_alertas(desp, forn, por_mes, limite, total_pago):
     alertas = []
     emp = [d for d in desp if d["tipo"] == "empenhado"]
+    # base para participação: só o que foi pago a fornecedores privados
+    pago_privado = sum(f["pago"] for k, f in forn.items() if privado(k, f["nome"])) or 1.0
 
-    # 1) Possível fracionamento: vários empenhos pequenos, mesmo fornecedor, mesmo mês,
-    #    que somados passam o limite de dispensa.
+    # 1) Possível fracionamento, agrupado por fornecedor: meses em que houve 3+ empenhos
+    #    abaixo do limite de dispensa que, somados, passam o limite.
     grupos = defaultdict(list)
     for d in emp:
-        if 0 < d["valor"] < limite:
-            grupos[(d["doc"] or d["fornecedor"], d["mes"])].append(d)
-    for (chave, mes), itens in grupos.items():
-        total = soma(itens)
-        if len(itens) >= 3 and total > limite:
+        k = d["doc"] or d["fornecedor"]
+        if 0 < d["valor"] < limite and privado(k, d["fornecedor"]):
+            grupos[(k, d["mes"])].append(d)
+    por_forn = defaultdict(list)
+    for (k, mes), itens in grupos.items():
+        if len(itens) >= 3 and soma(itens) > limite:
+            por_forn[k].append((mes, itens))
+    for k, meses in por_forn.items():
+        meses.sort()
+        total = sum(soma(it) for _, it in meses)
+        n_emp = sum(len(it) for _, it in meses)
+        nome = meses[0][1][0]["fornecedor"]
+        if len(meses) >= 3 and total >= 5 * limite:
+            grav = "alta"
+        elif len(meses) >= 2 or total >= 3 * limite:
+            grav = "media"
+        else:
+            grav = "baixa"
+        lista_meses = ", ".join(MESES[m - 1] for m, _ in meses)
+        alertas.append({
+            "tipo": "fracionamento", "gravidade": grav,
+            "titulo": f"{n_emp} empenhos abaixo do limite de dispensa somam {brl(total)} em {len(meses)} {'mês' if len(meses) == 1 else 'meses'}",
+            "fornecedor": nome, "doc": mascarar(k), "mes": lista_meses if len(meses) <= 3 else f"{len(meses)} meses",
+            "explicacao": (f"Em {lista_meses}, este fornecedor recebeu vários empenhos no mesmo mês, cada um abaixo de "
+                           f"{brl(limite)} (limite de dispensa), mas que somados passaram do limite. Pode ser normal "
+                           "(entregas parceladas de uma ata de registro de preços ou contrato já licitado) ou indicar "
+                           "divisão de compra para evitar licitação. Confira a modalidade de cada empenho."),
+            "empenhos": sorted({i["empenho"] for _, it in meses for i in it})[:25],
+            "valor": round(total, 2),
+        })
+
+    # 2) Concentração entre fornecedores privados.
+    for k, f in forn.items():
+        if not privado(k, f["nome"]):
+            continue
+        part = 100 * f["pago"] / pago_privado
+        if part >= 3:
             alertas.append({
-                "tipo": "fracionamento", "gravidade": "media" if total < 2 * limite else "alta",
-                "titulo": f"{len(itens)} empenhos abaixo do limite de dispensa somam {brl(total)}",
-                "fornecedor": itens[0]["fornecedor"], "doc": mascarar(chave), "mes": MESES[mes - 1],
-                "explicacao": (f"No mesmo mês, este fornecedor recebeu {len(itens)} empenhos, cada um abaixo de "
-                               f"{brl(limite)} (limite de dispensa), mas que somados passam do limite. "
-                               "Pode ser normal (ex.: entregas de uma ata de registro de preços já licitada) "
-                               "ou indicar divisão de compra para evitar licitação. Confira a modalidade de cada empenho."),
-                "empenhos": sorted({i["empenho"] for i in itens})[:20],
-                "valor": total,
+                "tipo": "concentracao", "gravidade": "alta" if part >= 10 else "media",
+                "titulo": f"{f['nome']} recebeu {str(round(part, 1)).replace('.', ',')}% do que foi pago a empresas privadas",
+                "fornecedor": f["nome"], "doc": mascarar(k), "valor": round(f["pago"], 2),
+                "explicacao": ("Concentração alta não é irregular por si só (hospitais conveniados, energia, merenda e transporte "
+                               "costumam liderar), mas vale conferir o contrato, a licitação de origem e os aditivos."),
             })
 
-    # 2) Concentração: um fornecedor com fatia grande de tudo que foi pago.
-    for chave, f in forn.items():
-        part = 100 * f["pago"] / total_pago
-        if part >= 5 and len(chave) != 11:
-            alertas.append({
-                "tipo": "concentracao", "gravidade": "alta" if part >= 15 else "media",
-                "titulo": f"{f['nome']} recebeu {str(round(part, 1)).replace('.', ',')}% de tudo que foi pago",
-                "fornecedor": f["nome"], "doc": mascarar(chave), "valor": round(f["pago"], 2),
-                "explicacao": ("Concentração alta não é irregular por si só (folha, INSS, concessionárias e "
-                               "contratos de saúde costumam liderar), mas merece olhar o contrato e a licitação de origem."),
-            })
-
-    # 3) Anulações altas: muito empenho cancelado depois.
-    for chave, f in forn.items():
-        if f["empenhado"] > limite and f["anulado"] / f["empenhado"] > 0.3:
+    # 3) Anulações altas.
+    for k, f in forn.items():
+        if privado(k, f["nome"]) and f["empenhado"] > 2 * limite and f["anulado"] / f["empenhado"] > 0.3:
             alertas.append({
                 "tipo": "anulacoes", "gravidade": "baixa",
-                "titulo": f"{100 * f['anulado'] / f['empenhado']:.0f}% do valor empenhado para {f['nome']} foi anulado",
-                "fornecedor": f["nome"], "doc": mascarar(chave), "valor": round(f["anulado"], 2),
-                "explicacao": "Anulações frequentes podem indicar planejamento ruim ou empenhos 'reservando' dinheiro sem uso real.",
+                "titulo": f"{round(100 * f['anulado'] / f['empenhado'])}% do valor empenhado para {f['nome']} foi anulado",
+                "fornecedor": f["nome"], "doc": mascarar(k), "valor": round(f["anulado"], 2),
+                "explicacao": "Anulações frequentes podem indicar planejamento ruim ou empenhos que reservam dinheiro sem uso real.",
             })
 
-    # 4) Pico de fim de ano: dezembro muito acima da média dos outros meses.
+    # 4) Pico de fim de ano.
     meses_com_dado = [m["empenhado"] for m in por_mes[:11] if m["empenhado"] > 0]
     if meses_com_dado and por_mes[11]["empenhado"] > 0:
         media = sum(meses_com_dado) / len(meses_com_dado)
@@ -276,10 +340,10 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
                 "tipo": "pico_dezembro", "gravidade": "media",
                 "titulo": f"Empenhos de dezembro foram {str(round(por_mes[11]['empenhado'] / media, 1)).replace('.', ',')}x a média do ano",
                 "valor": por_mes[11]["empenhado"],
-                "explicacao": "Gasto concentrado no fim do ano pode indicar pressa para 'usar o orçamento'. Vale ver o que foi comprado.",
+                "explicacao": "Gasto concentrado no fim do ano pode indicar pressa para usar o orçamento. Vale ver o que foi comprado.",
             })
 
-    # 5) Fornecedor que só aparece em um mês e leva valor alto.
+    # 5) Fornecedor privado que só aparece em um mês, com valor alto.
     meses_forn = defaultdict(set)
     valor_forn = defaultdict(float)
     for d in emp:
@@ -287,17 +351,18 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
         meses_forn[k].add(d["mes"])
         valor_forn[k] += d["valor"]
     for k, ms in meses_forn.items():
-        if len(ms) == 1 and valor_forn[k] > 5 * limite and len(k) != 11:
+        if len(ms) == 1 and valor_forn[k] > 5 * limite and privado(k, forn[k]["nome"]):
             alertas.append({
                 "tipo": "fornecedor_pontual", "gravidade": "baixa",
                 "titulo": f"{forn[k]['nome']} aparece em um único mês com {brl(valor_forn[k])}",
                 "fornecedor": forn[k]["nome"], "doc": mascarar(k), "valor": round(valor_forn[k], 2),
-                "explicacao": "Contratação pontual de valor alto. Confira na Receita Federal a data de abertura e a atividade da empresa (CNPJ).",
+                "mes": MESES[next(iter(ms)) - 1],
+                "explicacao": "Contratação pontual de valor alto. Confira na Receita Federal a data de abertura e a atividade da empresa.",
             })
 
     ordem = {"alta": 0, "media": 1, "baixa": 2}
     alertas.sort(key=lambda a: (ordem[a["gravidade"]], -a.get("valor", 0)))
-    return alertas[:200]
+    return alertas[:150]
 
 
 def main():

@@ -181,7 +181,7 @@ function render(){
     ${kpi('Empenhado',curto(t.empenhado),'Dinheiro reservado para gastos','#eff6ff','#2563eb','M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11')}
     ${kpi('Efetivamente pago',curto(t.pago),exec+'% do que foi arrecadado','#f5f3ff','#7c3aed','M2 7h20v10H2zM6 12h.01M18 12h.01M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0')}
     <div class="card kpi warn" style="cursor:pointer" onclick="irPara('alertas')"><div class="h"><span>Alertas de auditoria</span><div class="ico" style="background:#fef3c7;color:#b45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></div></div>
-      <div class="v">${al.length} indícios</div><div class="s">${altos} de prioridade alta · ver lista →</div></div>
+      <div class="v">${al.length} indícios</div><div class="s">${altos} para conferir primeiro · ver lista →</div></div>
   </section>
   <div class="tabs">
     <button data-t="geral" class="on" onclick="irPara('geral')">Visão geral</button>
@@ -194,14 +194,14 @@ function render(){
       <div class="card box"><h3>Mês a mês: entrou × saiu</h3><p class="d">Arrecadação comparada a empenhos e pagamentos</p>${grafMensal()}</div>
       <div class="card box"><h3>Quem gasta</h3><p class="d">Valores pagos por órgão</p>${donut(A.por_orgao.map(o=>({n:o.orgao,v:o.pago})))}</div>
     </div>
-    <div class="card box"><h3>Os 8 que mais receberam</h3><p class="d">Toque num nome para ver a ficha e gerar um pedido de informação</p>
+    <div class="card box"><h3>Os 8 que mais receberam</h3><p class="d">Inclui folha de pagamento (aparece como a própria prefeitura), previdência e repasses. Toque num nome para ver a ficha.</p>
       ${A.top_fornecedores.slice(0,8).map((f,i)=>`<div class="hb" style="cursor:pointer" onclick="fichaFornecedor(${i})"><div class="t"><span>${i+1}. ${esc(f.nome)}</span><b>${curto(f.pago)}</b></div><div class="trk"><i style="width:${100*f.pago/A.top_fornecedores[0].pago}%"></i></div></div>`).join('')}
     </div>
   </section>
   <section class="panel" id="p-alertas">
     <div class="info a"><div class="ib" style="background:var(--amb)">!</div><div><h4>Como funcionam os alertas?</h4><p>Regras automáticas procuram padrões que merecem conferência: compras divididas abaixo do limite de dispensa, fornecedores que concentram pagamentos, muitas anulações, picos de fim de ano. <b>Um alerta não é condenação, é um convite à fiscalização.</b> Use o botão de pedido de informação para pedir os documentos à prefeitura.</p></div></div>
     <div class="filters"><select id="f-tipo" class="sel"><option value="">Todos os tipos</option>${[...new Set(al.map(x=>x.tipo))].map(x=>`<option value="${x}">${TIPOS[x]||x}</option>`).join('')}</select>
-      <select id="f-grav" class="sel"><option value="">Toda prioridade</option><option value="alta">Alta</option><option value="media">Média</option><option value="baixa">Baixa</option></select>
+      <select id="f-grav" class="sel"><option value="">Toda prioridade</option><option value="alta">Conferir primeiro</option><option value="media">Prioridade média</option><option value="baixa">Prioridade baixa</option></select>
       <button class="btn" onclick="exportarAlertas()">⬇ Exportar CSV</button></div>
     <div class="alerts" id="lista-alertas"></div>
   </section>
@@ -236,14 +236,14 @@ function alertasFiltrados(){const t=$('#f-tipo')?.value,g=$('#f-grav')?.value;re
 function tabAlertas(){
   const l=alertasFiltrados();
   $('#lista-alertas').innerHTML=l.slice(0,80).map(x=>{const i=A.alertas.indexOf(x);return `<div class="card al ${x.gravidade}">
-    <div class="top"><span class="chip">${TIPOS[x.tipo]||x.tipo}</span><span><span class="chip ${x.gravidade}">${x.gravidade==='media'?'média':x.gravidade}</span>${x.mes?` <span class="chip">${x.mes}</span>`:''}</span></div>
+    <div class="top"><span class="chip">${TIPOS[x.tipo]||x.tipo}</span><span><span class="chip ${x.gravidade}">conferir: ${x.gravidade==='media'?'média':x.gravidade}</span>${x.mes?` <span class="chip">${x.mes}</span>`:''}</span></div>
     <h4>${esc(x.titulo)}</h4>${x.fornecedor?`<div class="who">${esc(x.fornecedor)} · <span class="doc">${esc(x.doc)}</span></div>`:''}
     <p class="ex">${esc(x.explicacao)}</p>${x.empenhos?`<div class="emp">Empenhos: ${x.empenhos.map(esc).join(', ')}</div>`:''}
     <div class="act"><button class="btn" onclick="copiarAlerta(${i})">Copiar resumo</button><button class="btn amb" onclick="esicAlerta(${i})">Pedir documentos (e-SIC)</button></div></div>`}).join('')||'<div class="card vazio">Nenhum alerta com esses filtros.</div>'}
 function fornFiltrados(){const q=($('#busca-forn')?.value||'').toLowerCase().replace(/[.\-\/]/g,'');return A.top_fornecedores.map((f,i)=>({...f,i})).filter(f=>!q||f.nome.toLowerCase().includes(q)||f.doc.replace(/[.\-\/]/g,'').includes(q))}
 function tabFornecedores(){
   const l=fornFiltrados();
-  $('#tb-forn').innerHTML=l.map(f=>`<tr class="cl" onclick="fichaFornecedor(${f.i})"><td><span class="rk">${f.i+1}</span></td><td><div class="nm">${esc(f.nome)}</div><div class="doc">${esc(f.doc)}${f.pessoa_fisica?' · pessoa física':''}</div></td><td class="n"><b>${brl(f.pago)}</b></td><td class="n hide-m">${brl(f.empenhado)}</td><td class="n"><span class="pct">${f.participacao.toLocaleString('pt-BR')}%</span></td><td class="n hide-m">${f.empenhos}</td></tr>`).join('')||'<tr><td colspan="6" class="vazio">Nenhum fornecedor encontrado.</td></tr>';
+  $('#tb-forn').innerHTML=l.map(f=>`<tr class="cl" onclick="fichaFornecedor(${f.i})"><td><span class="rk">${f.i+1}</span></td><td><div class="nm">${esc(f.nome)}</div><div class="doc">${esc(f.doc)}${f.ente_publico?' · <b>órgão público / encargo / repasse</b>':''}</div></td><td class="n"><b>${brl(f.pago)}</b></td><td class="n hide-m">${brl(f.empenhado)}</td><td class="n"><span class="pct">${f.participacao.toLocaleString('pt-BR')}%</span></td><td class="n hide-m">${f.empenhos}</td></tr>`).join('')||'<tr><td colspan="6" class="vazio">Nenhum fornecedor encontrado.</td></tr>';
   $('#info-forn').textContent=`Mostrando ${l.length} dos ${A.top_fornecedores.length} maiores recebedores (de ${A.totais.fornecedores} no total)`}
 
 function abrir(t,s,corpo,rodape){$('#m-t').textContent=t;$('#m-s').textContent=s;$('#m-b').innerHTML=corpo;$('#m-f').innerHTML=rodape;$('#modal').classList.add('on')}
