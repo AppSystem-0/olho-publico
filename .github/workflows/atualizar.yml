@@ -1,6 +1,7 @@
 name: Atualizar dados
 
-# Coleta os dados do TCE-SP todo dia e grava no repositório.
+# Coleta os dados do TCE-SP todo dia, gera o painel e grava o resultado no repositório.
+# Os dados brutos ficam no cache do GitHub Actions (compactados), não no git.
 # O Cloudflare Pages (conectado a este repositório) republica o site a cada commit.
 on:
   schedule:
@@ -9,23 +10,47 @@ on:
 
 permissions:
   contents: write
+  actions: write
+
+concurrency:
+  group: atualizar
+  cancel-in-progress: false
 
 jobs:
   atualizar:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python coletor/coletar.py
+
+      - name: Recuperar dados brutos já baixados
+        uses: actions/cache/restore@v4
+        with:
+          path: dados
+          key: dados-brutos-${{ github.run_id }}
+          restore-keys: dados-brutos-
+
+      - name: Coletar no TCE-SP
+        run: timeout 300m python coletor/coletar.py || echo "coleta parcial; segue com o que foi baixado"
+
+      - name: Guardar dados brutos para a próxima execução
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: dados
+          key: dados-brutos-${{ github.run_id }}
+
       - run: python coletor/processar.py
-      - name: Guardar dados no repositório (histórico auditável)
+
+      - name: Publicar resumo no repositório
         run: |
           git config user.name "olho-publico-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add dados site/dados
+          git add site/dados
           git diff --cached --quiet || git commit -m "Atualização automática $(date -u +%F)"
+          git pull --rebase -q origin main
           git push

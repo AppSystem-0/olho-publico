@@ -1,10 +1,10 @@
 # Olho Público
 
-Painel aberto das contas de prefeituras paulistas: de onde vem o dinheiro, quem gasta, quem recebe, e alertas automáticos de possíveis irregularidades. Começa por **Leme/SP** e funciona para qualquer um dos 644 municípios fiscalizados pelo TCE-SP: é só acrescentar a cidade no `cidades.yaml`.
+Painel aberto das contas de prefeituras paulistas: de onde vem o dinheiro, quem gasta, quem recebe, e alertas automáticos de possíveis irregularidades. Cobre o eixo da Anhanguera, de Campinas a Ribeirão Preto (24 cidades), e funciona para qualquer um dos 644 municípios fiscalizados pelo TCE-SP: é só acrescentar o nome da cidade no `cidades.yaml`.
 
 ## Como funciona
 
-1. **`coletor/coletar.py`** baixa despesas (empenhos, liquidações, pagamentos) e receitas mês a mês da API aberta do TCE-SP (`transparencia.tce.sp.gov.br/api`). Os dados brutos ficam em `dados/`, versionados no git, o que gera um histórico auditável de tudo que foi publicado.
+1. **`coletor/coletar.py`** baixa despesas (empenhos, liquidações, pagamentos) e receitas mês a mês da API aberta do TCE-SP (`transparencia.tce.sp.gov.br/api`). Os dados brutos ficam compactados em `dados/` (no cache do GitHub Actions, fora do git, porque cidades grandes como Campinas passam de 1 GB); o resumo publicado em `site/dados/` fica versionado no git, com histórico auditável.
 2. **`coletor/processar.py`** gera os resumos e os **alertas** em `site/dados/`.
 3. **`site/index.html`** é o painel: um arquivo estático, sem servidor.
 4. **GitHub Actions** roda tudo todo dia e publica no GitHub Pages. Custo: zero.

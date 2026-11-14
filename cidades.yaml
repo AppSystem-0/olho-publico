@@ -1,15 +1,35 @@
-# Cidades monitoradas. "slug" é o nome usado na API do TCE-SP
-# (minúsculo, sem acento, espaços viram hífen — ex.: "santa-gertrudes").
-# Para adicionar uma cidade, basta acrescentar uma linha.
+# Cidades monitoradas. Basta o nome oficial: o identificador usado pela API do TCE-SP
+# é descoberto automaticamente pela lista de municípios do próprio TCE.
+# Se uma cidade não for encontrada, informe "slug" manualmente.
+#
+# Eixo da Anhanguera (SP-330), de Campinas a Ribeirão Preto, e vizinhas.
 cidades:
-  - slug: leme
-    nome: Leme
-  - slug: santa-cruz-da-conceicao
-    nome: Santa Cruz da Conceição
-  # - slug: araras
-  #   nome: Araras
-  # - slug: pirassununga
-  #   nome: Pirassununga
+  - nome: Campinas
+  - nome: Paulínia
+  - nome: Hortolândia
+  - nome: Sumaré
+  - nome: Nova Odessa
+  - nome: Americana
+  - nome: Santa Bárbara d'Oeste
+  - nome: Limeira
+  - nome: Iracemápolis
+  - nome: Cordeirópolis
+  - nome: Engenheiro Coelho
+  - nome: Conchal
+  - nome: Araras
+  - nome: Leme
+    slug: leme
+  - nome: Santa Cruz da Conceição
+    slug: santa-cruz-da-conceicao
+  - nome: Pirassununga
+  - nome: Porto Ferreira
+  - nome: Descalvado
+  - nome: Santa Rita do Passa Quatro
+  - nome: Luís Antônio
+  - nome: São Simão
+  - nome: Cravinhos
+  - nome: Serrana
+  - nome: Ribeirão Preto
 
 # Anos a coletar
 anos: [2025, 2026]

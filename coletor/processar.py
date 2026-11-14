@@ -7,6 +7,7 @@ IMPORTANTE: os alertas são INDÍCIOS para orientar a fiscalização cidadã.
 Não provam irregularidade: cada um traz o motivo e os empenhos de origem
 para que qualquer pessoa confira no documento oficial.
 """
+import gzip
 import html
 import json
 import re
@@ -132,7 +133,11 @@ def mascarar(doc: str) -> str:
 
 
 def ler_lista(arquivo: Path):
-    dados = json.loads(arquivo.read_text(encoding="utf-8"))
+    if arquivo.suffix == ".gz":
+        with gzip.open(arquivo, "rt", encoding="utf-8") as f:
+            dados = json.load(f)
+    else:
+        dados = json.loads(arquivo.read_text(encoding="utf-8"))
     if isinstance(dados, dict):  # algumas respostas vêm embrulhadas
         for v in dados.values():
             if isinstance(v, list):
@@ -141,15 +146,25 @@ def ler_lista(arquivo: Path):
     return dados
 
 
+def arquivos(pasta: Path, tipo: str):
+    """Um arquivo por mês; prefere o .json.gz quando existem os dois formatos."""
+    por_mes = {}
+    for arq in sorted(pasta.glob(f"*/{tipo}-*.json*")):
+        chave = (arq.parent.name, arq.name.split(".")[0])
+        if chave not in por_mes or arq.suffix == ".gz":
+            por_mes[chave] = arq
+    return [por_mes[k] for k in sorted(por_mes)]
+
+
 def processar_cidade(slug: str, nome: str, limites: dict):
     pasta = RAIZ / "dados" / slug
     desp, rec = [], []
-    for arq in sorted(pasta.glob("*/despesas-*.json")):
+    for arq in arquivos(pasta, "despesas"):
         ano = int(arq.parent.name)
         for r in ler_lista(arq):
             desp.append({
                 "ano": ano,
-                "mes": mes_num(campo(r, "mes")) or int(arq.stem.split("-")[1]),
+                "mes": mes_num(campo(r, "mes")) or int(arq.name.split("-")[1][:2]),
                 "orgao": str(campo(r, "orgao", "Não informado")).strip(),
                 "tipo": tipo_evento(campo(r, "evento")),
                 "empenho": str(campo(r, "empenho")).strip(),
@@ -158,12 +173,12 @@ def processar_cidade(slug: str, nome: str, limites: dict):
                 "data": str(campo(r, "data")),
                 "valor": num(campo(r, "valor", 0)),
             })
-    for arq in sorted(pasta.glob("*/receitas-*.json")):
+    for arq in arquivos(pasta, "receitas"):
         ano = int(arq.parent.name)
         for r in ler_lista(arq):
             rec.append({
                 "ano": ano,
-                "mes": mes_num(campo(r, "mes")) or int(arq.stem.split("-")[1]),
+                "mes": mes_num(campo(r, "mes")) or int(arq.name.split("-")[1][:2]),
                 "fonte": str(campo(r, "fonte", "Não informada")).strip(),
                 "categoria": str(campo(r, "categoria", "Não informada")).strip(),
                 "valor": num(campo(r, "valor_receita", 0)),
@@ -368,16 +383,24 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
 def main():
     cfg = yaml.safe_load((RAIZ / "cidades.yaml").read_text(encoding="utf-8"))
     limites = {int(k): float(v) for k, v in cfg.get("limite_dispensa", {}).items()}
+    resolvidas = RAIZ / "dados" / "cidades.json"
+    cidades = (json.loads(resolvidas.read_text(encoding="utf-8")) if resolvidas.exists()
+               else [{"slug": c["slug"], "nome": c["nome"]} for c in cfg["cidades"] if c.get("slug")])
     SAIDA.mkdir(parents=True, exist_ok=True)
     indice = []
-    for c in cfg["cidades"]:
-        if not (RAIZ / "dados" / c["slug"]).exists():
-            print(f"(sem dados ainda para {c['nome']})")
+    for c in cidades:
+        if not any((RAIZ / "dados" / c["slug"]).glob("*/despesas-*")):
+            print(f"(sem dados para {c['nome']} — confira o identificador '{c['slug']}')")
             continue
-        res = processar_cidade(c["slug"], c["nome"], limites)
+        try:
+            res = processar_cidade(c["slug"], c["nome"], limites)
+        except Exception as e:  # uma cidade com problema não derruba as outras
+            print(f"! erro ao processar {c['nome']}: {e}")
+            continue
         (SAIDA / f"{c['slug']}.json").write_text(json.dumps(res, ensure_ascii=False), encoding="utf-8")
         indice.append({"slug": c["slug"], "nome": c["nome"]})
-        print(f"✓ {c['nome']}: {sum(len(a['alertas']) for a in res['anos'].values())} alertas")
+        print(f"✓ {c['nome']}: {sum(len(a['alertas']) for a in res['anos'].values())} alertas", flush=True)
+    indice.sort(key=lambda c: c["nome"])
     (SAIDA / "cidades.json").write_text(json.dumps(indice, ensure_ascii=False), encoding="utf-8")
 
 
