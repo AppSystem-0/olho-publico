@@ -1,6 +1,6 @@
 # Olho Público
 
-Painel aberto das contas de prefeituras paulistas: de onde vem o dinheiro, quem gasta, quem recebe, e alertas automáticos de possíveis irregularidades. Cobre o eixo da Anhanguera, de Campinas a Ribeirão Preto (24 cidades), e funciona para qualquer um dos 644 municípios fiscalizados pelo TCE-SP: é só acrescentar o nome da cidade no `cidades.yaml`.
+Painel aberto das contas de prefeituras paulistas: de onde vem o dinheiro, quem gasta e quem recebe, com dados oficiais do TCE-SP conferidos com o Tesouro Nacional e pontos de atenção estatísticos (que não indicam irregularidade). Cobre o eixo da Anhanguera, de Campinas a Ribeirão Preto (24 cidades), e funciona para qualquer um dos 644 municípios fiscalizados pelo TCE-SP: é só acrescentar o nome da cidade no `cidades.yaml`.
 
 ## Como funciona
 
@@ -26,7 +26,7 @@ python coletor/processar.py
 cd site && python -m http.server 8000   # abra http://localhost:8000
 ```
 
-## Alertas (versão 1)
+## Pontos de atenção (padrões estatísticos)
 
 | Alerta | Regra |
 |---|---|
@@ -36,7 +36,7 @@ cd site && python -m http.server 8000   # abra http://localhost:8000
 | Pico de fim de ano | Empenhos de dezembro acima de 2x a média mensal |
 | Fornecedor pontual | Aparece em um único mês com valor acima de 5x o limite de dispensa |
 
-Todo alerta é um **indício** e traz o critério e os números dos empenhos para conferência. Nunca chame um alerta de "fraude" no site ou nas redes.
+Os pontos de atenção são padrões estatísticos e **não indicam irregularidade**. Toda comunicação do projeto descreve fatos e cita a fonte oficial; nunca acusa pessoas, empresas ou órgãos. O tipo "fracionamento" está desligado (`alertas_desativados` no `cidades.yaml`).
 
 ## Próximas fontes (roadmap)
 

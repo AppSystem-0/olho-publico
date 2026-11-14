@@ -4,14 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Olho Público — dinheiro público municipal, aberto</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f6f7f9;--card:#fff;--ink:#0f172a;--ink2:#334155;--mute:#64748b;--line:#e2e8f0;--soft:#f1f5f9;
 --acc:#059669;--acc-d:#047857;--acc-s:#ecfdf5;--red:#dc2626;--red-s:#fef2f2;--amb:#d97706;--amb-s:#fffbeb;--blue:#2563eb;--r:16px;--sh:0 1px 2px rgba(15,23,42,.04),0 4px 16px rgba(15,23,42,.05)}
 @media (prefers-color-scheme:dark){:root{--bg:#0b1120;--card:#111827;--ink:#f1f5f9;--ink2:#cbd5e1;--mute:#94a3b8;--line:#1f2937;--soft:#1e293b;--acc:#34d399;--acc-d:#10b981;--acc-s:#052e22;--red:#f87171;--red-s:#2a1215;--amb:#fbbf24;--amb-s:#2a1f08;--sh:none}}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}html,body{overflow-x:hidden}.card,.g2>*,.kpis>*,.panel{min-width:0}
-body{margin:0;font:14px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+body{margin:0;font:14px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 button,select,input,textarea{font:inherit;color:inherit}
 .wrap{max-width:1180px;margin:auto;padding:0 18px}
 .topbar{background:#0f172a;color:#94a3b8;font-size:12px;padding:7px 0}
@@ -159,17 +157,17 @@ footer a{color:#94a3b8;text-decoration:none;display:block;padding:2px 0}footer a
 
 <main class="wrap">
   <section class="hero">
-    <span class="pill">● Auditoria cívica contínua</span>
+    <span class="pill">● Dados públicos oficiais, explicados</span>
     <h1 id="titulo">Para onde vai o dinheiro público?</h1>
-    <p>Receitas, empenhos e pagamentos extraídos automaticamente do Tribunal de Contas do Estado. Veja quem recebe, quanto e quando, e use os alertas como ponto de partida para fiscalizar.</p>
+    <p>Receitas, empenhos e pagamentos declarados pela prefeitura ao Tribunal de Contas do Estado, conferidos com o Tesouro Nacional. Veja de onde vem e para onde vai o dinheiro público.</p>
   </section>
   <div id="app"><div class="vazio">Carregando…</div></div>
 </main>
 
 <footer><div class="wrap">
-  <div><h5>Olho Público</h5><p>Projeto aberto e apartidário de controle social. Os alertas são <b style="color:#fff">indícios automáticos, não acusações</b>: cada um explica o critério usado e as explicações possíveis que não envolvem irregularidade.</p></div>
+  <div><h5>Olho Público</h5><p>Projeto aberto e apartidário que reorganiza dados públicos oficiais. <b style="color:#fff">Nenhum conteúdo deste site constitui acusação, denúncia ou juízo sobre a legalidade de atos de pessoas, empresas ou órgãos.</b> Encontrou um erro? <a href="sobre.html#correcoes" style="display:inline;color:#34d399">Peça correção</a>.</p><p style="margin-top:8px"><a href="sobre.html" style="display:inline">Sobre, metodologia e termos de uso</a></p></div>
   <div><h5>Fontes oficiais</h5><a href="https://transparencia.tce.sp.gov.br/" target="_blank" rel="noopener">→ TCE-SP · Portal da Transparência Municipal</a><a href="https://pncp.gov.br" target="_blank" rel="noopener">→ Portal Nacional de Contratações Públicas</a><a href="https://portaldatransparencia.gov.br" target="_blank" rel="noopener">→ Portal da Transparência federal</a></div>
-  <div><h5>Base legal</h5><p>Lei de Acesso à Informação (12.527/2011), Lei de Responsabilidade Fiscal (LC 101/2000), Lei da Transparência (LC 131/2009). CPFs mascarados conforme a LGPD.</p></div>
+  <div><h5>Base legal</h5><p>Lei de Acesso à Informação (12.527/2011), Lei de Responsabilidade Fiscal (LC 101/2000), Lei da Transparência (LC 131/2009). Nomes de pessoas físicas não são exibidos (LGPD).</p></div>
 </div></footer>
 
 <div class="modal" id="modal"><div class="mbox"><div class="mh"><div><h3 id="m-t"></h3><p id="m-s"></p></div><button onclick="fechar()" aria-label="Fechar">×</button></div><div class="mb" id="m-b"></div><div class="mf" id="m-f"></div></div></div>
@@ -181,7 +179,8 @@ const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const curto=v=>{const a=Math.abs(v),f=(n,d)=>n.toLocaleString('pt-BR',{maximumFractionDigits:d});return a>=1e9?'R$ '+f(v/1e9,2)+' bi':a>=1e6?'R$ '+f(v/1e6,1)+' mi':a>=1e3?'R$ '+f(v/1e3,0)+' mil':brl(v)};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const semCodigo=t=>String(t??'').replace(/^\s*[\d.]+\s*-\s*/,'');
-const TIPOS={fracionamento:'Possível fracionamento',concentracao:'Concentração',anulacoes:'Anulações',pico_dezembro:'Pico de fim de ano',fornecedor_pontual:'Fornecedor pontual'};
+const TIPOS={fracionamento:'Compras parceladas',concentracao:'Maiores participações',anulacoes:'Empenhos anulados',pico_dezembro:'Empenhos em dezembro',fornecedor_pontual:'Fornecimento em um único mês'};
+const RELEV={alta:'relevância alta',media:'relevância média',baixa:'relevância baixa'};
 const CORES=['#059669','#2563eb','#d97706','#7c3aed','#db2777','#0891b2','#65a30d','#94a3b8'];
 let D=null,A=null,aba='geral',limAl=12,limF=20;
 
@@ -223,12 +222,12 @@ function render(){
     ${kpi('Arrecadado',curto(t.receita),pop?`${brl(t.receita/pop).replace(/,\d+$/,'')} por habitante · ${pop.toLocaleString('pt-BR')} hab.`:'Receitas de todas as fontes','#ecfdf5','#059669','M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6')}
     ${kpi('Empenhado',curto(t.empenhado),'Dinheiro reservado para gastos','#eff6ff','#2563eb','M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11')}
     ${kpi('Efetivamente pago',curto(t.pago),exec+'% do que foi arrecadado','#f5f3ff','#7c3aed','M2 7h20v10H2zM6 12h.01M18 12h.01M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0')}
-    <div class="card kpi warn" style="cursor:pointer" onclick="irPara('alertas')"><div class="h"><span>Alertas</span><div class="ico" style="background:#fef3c7;color:#b45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></div></div>
-      <div class="v">${al.length} indícios</div><div class="s">${altos} para conferir primeiro · ver lista →</div></div>
+    <div class="card kpi warn" style="cursor:pointer" onclick="irPara('alertas')"><div class="h"><span>Pontos de atenção</span><div class="ico" style="background:#fef3c7;color:#b45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></div></div>
+      <div class="v">${al.length}</div><div class="s">padrões estatísticos para consulta · ver lista →</div></div>
   </section>
   <div class="tabs">
     <button data-t="geral" class="on" onclick="irPara('geral',1)">Visão geral</button>
-    <button data-t="alertas" onclick="irPara('alertas',1)">Alertas <span class="badge">${al.length}</span></button>
+    <button data-t="alertas" onclick="irPara('alertas',1)">Pontos de atenção <span class="badge">${al.length}</span></button>
     <button data-t="forn" onclick="irPara('forn',1)">Quem recebe <span class="badge">${t.fornecedores}</span></button>
     <button data-t="rec" onclick="irPara('rec',1)">De onde vem</button>
   </div>
@@ -242,9 +241,9 @@ function render(){
     </div>
   </section>
   <section class="panel" id="p-alertas">
-    <div class="info a"><div class="ib" style="background:var(--amb)">!</div><div><h4>Como funcionam os alertas?</h4><p>Regras automáticas procuram padrões que merecem conferência: compras divididas abaixo do limite de dispensa, fornecedores que concentram pagamentos, muitas anulações, picos de fim de ano. <b>Um alerta não é condenação, é um convite à fiscalização.</b> Use o botão de pedido de informação para pedir os documentos à prefeitura.</p></div></div>
+    <div class="info a"><div class="ib" style="background:var(--amb)">!</div><div><h4>O que são os pontos de atenção?</h4><p>São padrões estatísticos calculados automaticamente a partir dos dados oficiais: maiores participações nos pagamentos, empenhos anulados, gastos concentrados em um mês. <b>Não indicam irregularidade, ilegalidade ou má-fé de nenhuma pessoa, empresa ou órgão.</b> Servem apenas para orientar a consulta aos documentos oficiais, que podem ser pedidos à prefeitura pela Lei de Acesso à Informação. <a href="sobre.html#pontos">Saiba mais</a>.</p></div></div>
     <div class="filters"><select id="f-tipo" class="sel"><option value="">Todos os tipos</option>${[...new Set(al.map(x=>x.tipo))].map(x=>`<option value="${x}">${TIPOS[x]||x}</option>`).join('')}</select>
-      <select id="f-grav" class="sel"><option value="">Toda prioridade</option><option value="alta">Conferir primeiro</option><option value="media">Prioridade média</option><option value="baixa">Prioridade baixa</option></select>
+      <select id="f-grav" class="sel"><option value="">Toda relevância</option><option value="alta">Relevância alta</option><option value="media">Relevância média</option><option value="baixa">Relevância baixa</option></select>
       <button class="btn" onclick="exportarAlertas()">⬇ Exportar CSV</button></div>
     <div class="alerts" id="lista-alertas"></div><div id="mais-al"></div>
   </section>
@@ -268,7 +267,7 @@ function selo(of){
   const tab=`<details><summary>Ver a comparação</summary><div class="tw"><table><tr><th></th><th class="n">Calculado (TCE-SP)</th><th class="n">Oficial (Tesouro)</th><th class="n">Diferença</th></tr>${Object.entries(of.itens).map(([k,v])=>`<tr><td>${NOME[k]}</td><td class="n">${brl(v.calculado)}</td><td class="n">${brl(v.tesouro)}</td><td class="n">${v.diferenca_pct===0?'0':v.diferenca_pct.toLocaleString('pt-BR')}%</td></tr>`).join('')}</table></div><p style="margin-top:6px">Fonte oficial: Relatório Resumido da Execução Orçamentária (RREO, Anexo 1) entregue pela prefeitura ao Tesouro Nacional, sistema Siconfi. Consulte em <a href="https://siconfi.tesouro.gov.br" target="_blank" rel="noopener">siconfi.tesouro.gov.br</a>.</p></details>`;
   return of.conferido
     ?`<div class="selo ok"><div class="sb" style="background:var(--acc-d)">✓</div><div><h4>Números conferidos com o Tesouro Nacional</h4><p>Receita, empenho e pagamento calculados a partir dos dados detalhados do TCE-SP batem com o relatório fiscal oficial da prefeitura ${per}.</p>${tab}</div></div>`
-    :`<div class="selo dif"><div class="sb" style="background:var(--amb)">!</div><div><h4>Há diferença em relação ao Tesouro Nacional</h4><p>Os totais calculados a partir do TCE-SP não batem com o relatório fiscal oficial ${per}. Pode ser atraso na publicação de uma das fontes ou dados declarados de forma diferente.</p>${tab}</div></div>`}
+    :`<div class="selo dif"><div class="sb" style="background:var(--amb)">!</div><div><h4>Diferença entre TCE-SP e Tesouro Nacional</h4><p>Os totais calculados a partir do TCE-SP diferem dos do relatório fiscal oficial ${per}. Diferenças entre os dois sistemas costumam decorrer de datas de atualização, ajustes contábeis ou critérios distintos de registro.</p>${tab}</div></div>`}
 function kpi(l,v,s,bg,c,path){return `<div class="card kpi"><div class="h"><span>${l}</span><div class="ico" style="background:${bg};color:${c}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg></div></div><div class="v">${v}</div><div class="s">${s}</div></div>`}
 function grafMensal(){
   const m=A.por_mes,max=Math.max(...m.flatMap(x=>[x.receita,x.empenhado,x.pago]),1);
@@ -287,10 +286,10 @@ function alertasFiltrados(){const t=$('#f-tipo')?.value,g=$('#f-grav')?.value;re
 function tabAlertas(){
   const l=alertasFiltrados();
   $('#lista-alertas').innerHTML=l.slice(0,limAl).map(x=>{const i=A.alertas.indexOf(x);return `<div class="card al ${x.gravidade}">
-    <div class="top"><span class="chip">${TIPOS[x.tipo]||x.tipo}</span><span><span class="chip ${x.gravidade}">conferir: ${x.gravidade==='media'?'média':x.gravidade}</span>${x.mes?` <span class="chip">${x.mes}</span>`:''}</span></div>
+    <div class="top"><span class="chip">${TIPOS[x.tipo]||x.tipo}</span><span><span class="chip">${RELEV[x.gravidade]}</span>${x.mes?` <span class="chip">${x.mes}</span>`:''}</span></div>
     <h4>${esc(x.titulo)}</h4>${x.fornecedor?`<div class="who">${esc(x.fornecedor)} · <span class="doc">${esc(x.doc)}</span></div>`:''}
-    <p class="ex">${esc(x.explicacao)}</p>${x.empenhos?`<div class="emp">Empenhos: ${x.empenhos.map(esc).join(', ')}</div>`:''}
-    <div class="act"><button class="btn" onclick="copiarAlerta(${i})">Copiar resumo</button><button class="btn amb" onclick="esicAlerta(${i})">Pedir documentos (e-SIC)</button></div></div>`}).join('')||'<div class="card vazio">Nenhum alerta com esses filtros.</div>';
+    <p class="ex">${esc(x.explicacao)}</p><p style="margin:0;font-size:11.5px;color:var(--mute)">Informação estatística. Não indica irregularidade.</p>${x.empenhos?`<div class="emp">Empenhos: ${x.empenhos.map(esc).join(', ')}</div>`:''}
+    <div class="act"><button class="btn" onclick="copiarAlerta(${i})">Copiar resumo</button><button class="btn pri" onclick="esicAlerta(${i})">Pedir informações (e-SIC)</button></div></div>`}).join('')||'<div class="card vazio">Nenhum alerta com esses filtros.</div>';
   $('#mais-al').innerHTML=l.length>limAl?`<button class="mais" onclick="limAl+=12;tabAlertas()">Mostrar mais ${Math.min(12,l.length-limAl)} de ${l.length-limAl} restantes</button>`:''}
 function fornFiltrados(){const q=($('#busca-forn')?.value||'').toLowerCase().replace(/[.\-\/]/g,'');return A.top_fornecedores.map((f,i)=>({...f,i})).filter(f=>!q||f.nome.toLowerCase().includes(q)||f.doc.replace(/[.\-\/]/g,'').includes(q))}
 function tabFornecedores(){
@@ -307,8 +306,8 @@ function fichaFornecedor(i){
   const f=A.top_fornecedores[i],als=A.alertas.filter(a=>a.doc===f.doc);
   abrir(f.nome,`${f.doc} · ${D.nome} · ${$('#ano').value}`,`
     <div class="steps"><div class="on"><b>${curto(f.empenhado)}</b><span>1. Empenhado<br>verba reservada</span></div><div class="on"><b>${f.empenhos}</b><span>2. Empenhos<br>emitidos</span></div><div class="on"><b>${curto(f.pago)}</b><span>3. Pago<br>dinheiro saiu</span></div></div>
-    <div class="note">Este fornecedor recebeu <b>${f.participacao.toLocaleString('pt-BR')}%</b> de tudo que a prefeitura pagou no ano.${f.ente_publico?' É um órgão público, encargo ou repasse (folha, previdência, tributos), não uma empresa contratada.':f.pessoa_fisica?' É pessoa física: o documento não é exibido (LGPD).':' Confira a data de abertura e os sócios no cadastro de CNPJ da Receita Federal.'}</div>
-    <div><b style="font-size:13px">Alertas ligados a este fornecedor (${als.length})</b>${als.length?als.map(a=>`<div class="hb" style="margin-top:8px"><span class="chip ${a.gravidade}">${a.gravidade==='media'?'média':a.gravidade}</span> <span style="font-size:13px">${esc(a.titulo)}</span></div>`).join(''):'<p class="d" style="color:var(--mute);font-size:13px;margin:6px 0 0">Nenhum alerta automático.</p>'}</div>`,
+    <div class="note">Participação nos pagamentos do ano: <b>${f.participacao.toLocaleString('pt-BR')}%</b> do total pago pela prefeitura.${f.ente_publico?' É um órgão público, encargo ou repasse (folha, previdência, tributos), não uma empresa contratada.':f.pessoa_fisica?' Pessoa física: nome e documento não são exibidos (LGPD).':''}</div>
+    <div><b style="font-size:13px">Pontos de atenção estatísticos (${als.length})</b>${als.length?als.map(a=>`<div class="hb" style="margin-top:8px"><span class="chip">${TIPOS[a.tipo]||a.tipo}</span> <span style="font-size:13px">${esc(a.titulo)}</span></div>`).join(''):'<p class="d" style="color:var(--mute);font-size:13px;margin:6px 0 0">Nenhum.</p>'}</div>`,
     `<button class="btn" onclick="fechar()">Fechar</button><button class="btn pri" onclick="esicFornecedor(${i})">Gerar pedido de informação</button>`)}
 
 function minuta(assunto,itens,pedidos){
@@ -332,10 +331,10 @@ function mostrarMinuta(txt){abrir('Pedido de informação (e-SIC)','Baseado na L
 function esicFornecedor(i){const f=A.top_fornecedores[i];mostrarMinuta(minuta(`Despesas com ${f.nome} no exercício de ${$('#ano').value}`,
   [`- Fornecedor: ${f.nome} (${f.doc})`,`- Total pago no exercício: ${brl(f.pago)} em ${f.empenhos} empenhos`,`- Fonte dos dados: Portal da Transparência Municipal do TCE-SP`],
   ['Relação dos contratos, atas de registro de preços e processos de compra (com modalidade de licitação) que deram origem a esses pagamentos;','Cópia dos contratos e eventuais termos aditivos;','Notas fiscais e documentos de atesto/recebimento assinados pelo fiscal do contrato.']))}
-function esicAlerta(i){const a=A.alertas[i];mostrarMinuta(minuta(`Esclarecimentos sobre despesas — ${TIPOS[a.tipo]||a.tipo}`,
-  [`- Situação observada nos dados públicos: ${a.titulo}`,a.fornecedor?`- Fornecedor: ${a.fornecedor} (${a.doc})`:'',a.mes?`- Mês de referência: ${a.mes}/${$('#ano').value}`:'',a.empenhos?`- Empenhos: ${a.empenhos.join(', ')}`:''].filter(Boolean),
-  ['Modalidade de contratação e número do processo de cada empenho citado;','Justificativas técnicas e pareceres que fundamentaram as contratações;','Cópia dos contratos, notas fiscais e documentos de recebimento correspondentes.']))}
-function copiarAlerta(i){const a=A.alertas[i];copiar(`[Olho Público · ${D.nome}] ${a.titulo}${a.fornecedor?` | ${a.fornecedor} (${a.doc})`:''} | ${a.explicacao} | Fonte: TCE-SP`,'Resumo do alerta copiado')}
+function esicAlerta(i){const a=A.alertas[i];mostrarMinuta(minuta(`Pedido de acesso a informações sobre despesas públicas`,
+  [`- Referência (dados públicos do TCE-SP): ${a.titulo}`,a.fornecedor?`- Fornecedor: ${a.fornecedor} (${a.doc})`:'',a.mes?`- Mês de referência: ${a.mes}/${$('#ano').value}`:'',a.empenhos?`- Empenhos: ${a.empenhos.join(', ')}`:''].filter(Boolean),
+  ['Modalidade de contratação e número do processo de cada despesa citada;','Cópia dos contratos ou atas correspondentes;','Notas fiscais e documentos de recebimento correspondentes.']))}
+function copiarAlerta(i){const a=A.alertas[i];copiar(`[Olho Público · ${D.nome}] ${a.titulo}${a.fornecedor?` | ${a.fornecedor} (${a.doc})`:''} | ${a.explicacao} Informação estatística, não indica irregularidade. | Fonte: TCE-SP (dados declarados pela prefeitura)`,'Resumo copiado')}
 function exportarFornecedores(){baixarCSV(`fornecedores-${D.slug}-${$('#ano').value}.csv`,[['posicao','fornecedor','cnpj_cpf','pago','empenhado','participacao_pct','empenhos'],...fornFiltrados().map(f=>[f.i+1,f.nome,f.doc,f.pago.toFixed(2).replace('.',','),f.empenhado.toFixed(2).replace('.',','),String(f.participacao).replace('.',','),f.empenhos])])}
 function exportarAlertas(){baixarCSV(`alertas-${D.slug}-${$('#ano').value}.csv`,[['tipo','prioridade','titulo','fornecedor','documento','mes','valor','empenhos','explicacao'],...alertasFiltrados().map(a=>[TIPOS[a.tipo]||a.tipo,a.gravidade,a.titulo,a.fornecedor,a.doc,a.mes,(a.valor||0).toFixed(2).replace('.',','),(a.empenhos||[]).join(' '),a.explicacao])])}
 init();

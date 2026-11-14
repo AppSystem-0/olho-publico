@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sobre, metodologia e termos — Olho Público</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#0f172a;--ink2:#334155;--mute:#64748b;--line:#e2e8f0;--acc:#047857;--acc-s:#ecfdf5}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1120;--card:#111827;--ink:#f1f5f9;--ink2:#cbd5e1;--mute:#94a3b8;--line:#1f2937;--acc:#34d399;--acc-s:#052e22}}
+*{box-sizing:border-box}body{margin:0;font:15px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
+header{background:#0f172a;color:#fff;padding:14px 0}header .w{display:flex;justify-content:space-between;align-items:center;gap:10px}
+header a{color:#fff;text-decoration:none;font-weight:800}header a span{color:#34d399}header .v{font-weight:600;font-size:14px;color:#cbd5e1}
+.w{max-width:760px;margin:auto;padding:0 18px}
+nav.idx{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:20px 0;font-size:14px}
+nav.idx a{color:var(--acc);text-decoration:none;display:inline-block;margin:2px 12px 2px 0}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 20px 14px;margin-bottom:14px}
+h1{font-size:26px;margin:24px 0 4px;letter-spacing:-.02em}h2{font-size:18px;margin:16px 0 8px}
+p,li{color:var(--ink2)}a{color:var(--acc)}ul{padding-left:20px}
+.destaque{background:var(--acc-s);border-left:4px solid var(--acc);padding:12px 14px;border-radius:0 10px 10px 0;color:var(--ink)}
+footer{text-align:center;color:var(--mute);font-size:13px;padding:24px 0 40px}
+</style>
+</head>
+<body>
+<header><div class="w"><a href="./">Olho<span>Público</span></a><a class="v" href="./">← Voltar ao painel</a></div></header>
+<main class="w">
+<h1>Sobre, metodologia e termos de uso</h1>
+<p style="color:var(--mute);margin-top:0">Última atualização: 14 de novembro de 2026</p>
+
+<nav class="idx">
+<a href="#sobre">O que é</a><a href="#fontes">Fontes</a><a href="#metodologia">Metodologia</a><a href="#conferencia">Conferência com o Tesouro</a><a href="#pontos">Pontos de atenção</a><a href="#limitacoes">Limitações</a><a href="#aviso">Aviso legal</a><a href="#correcoes">Correções</a><a href="#termos">Termos de uso</a><a href="#privacidade">Privacidade</a>
+</nav>
+
+<section id="sobre"><h2>O que é o Olho Público</h2>
+<p>O Olho Público é um projeto independente, apartidário e sem fins políticos, que reorganiza e apresenta de forma simples dados <b>já publicados por órgãos oficiais</b> sobre as receitas e despesas de municípios paulistas. O objetivo é facilitar o acesso do cidadão a informações públicas, conforme a Lei de Acesso à Informação (Lei nº 12.527/2011) e a Lei de Responsabilidade Fiscal (LC nº 101/2000).</p>
+<p>O projeto não tem vínculo com prefeituras, câmaras, partidos, candidatos ou empresas citadas.</p>
+</section>
+
+<section id="fontes"><h2>Fontes dos dados</h2>
+<ul>
+<li><b>Tribunal de Contas do Estado de São Paulo (TCE-SP)</b>, Portal da Transparência Municipal: receitas, empenhos, liquidações e pagamentos declarados por cada prefeitura ao TCE-SP pelo sistema Audesp. <a href="https://transparencia.tce.sp.gov.br/" target="_blank" rel="noopener">transparencia.tce.sp.gov.br</a></li>
+<li><b>Tesouro Nacional</b>, sistema Siconfi: Relatório Resumido da Execução Orçamentária (RREO, Anexo 1) entregue por cada prefeitura, usado para conferência. <a href="https://siconfi.tesouro.gov.br/" target="_blank" rel="noopener">siconfi.tesouro.gov.br</a></li>
+</ul>
+<p>Os dados são <b>declarados pelos próprios municípios</b>. O Olho Público não produz, altera nem complementa esses dados, apenas os soma, agrupa e apresenta.</p>
+</section>
+
+<section id="metodologia"><h2>Metodologia</h2>
+<ul>
+<li>Os dados são baixados automaticamente todos os dias das fontes acima. Os meses mais recentes são baixados de novo para incluir correções feitas pelas prefeituras.</li>
+<li><b>Empenhado</b>: valor reservado no orçamento para uma despesa, já descontadas as anulações. <b>Pago</b>: valor efetivamente transferido ao credor. <b>Arrecadado</b>: receitas registradas no ano, de todas as fontes.</li>
+<li>"Quem recebe" soma os pagamentos por credor (CNPJ). Aparecem também órgãos públicos, previdência, bancos e tributos, porque as prefeituras registram assim a folha de pagamento, os repasses e os encargos. Esses casos são identificados no site.</li>
+<li>Todo o código usado está publicado e pode ser verificado e reproduzido por qualquer pessoa: <a href="https://github.com/AppSystem-0/olho-publico" target="_blank" rel="noopener">github.com/AppSystem-0/olho-publico</a>.</li>
+</ul>
+</section>
+
+<section id="conferencia"><h2>Conferência com o Tesouro Nacional</h2>
+<p>Para verificar se os cálculos estão corretos, os totais de receita, empenho e pagamento obtidos a partir dos dados detalhados do TCE-SP são comparados com os totais que a própria prefeitura informou ao Tesouro Nacional no RREO, no mesmo período. Quando a diferença é menor que 1%, o painel exibe o selo <b>"Números conferidos com o Tesouro Nacional"</b>.</p>
+<p>Quando há diferença, o painel apenas informa os dois valores. Diferenças entre sistemas oficiais costumam decorrer de datas de atualização, ajustes contábeis ou critérios distintos de registro, e <b>não significam, por si só, erro ou irregularidade</b>.</p>
+</section>
+
+<section id="pontos"><h2>O que são os "pontos de atenção"</h2>
+<p class="destaque">Os pontos de atenção são <b>padrões estatísticos</b> calculados automaticamente, com as mesmas regras para todos os municípios. <b>Não indicam irregularidade, ilegalidade, fraude ou má-fé</b> de nenhuma pessoa, empresa ou órgão, e não substituem a análise dos órgãos de controle.</p>
+<p>Exemplos: os fornecedores privados com maior participação nos pagamentos do ano; fornecedores com parte relevante do valor empenhado depois anulada; empenhos de dezembro acima da média dos outros meses; fornecedores com todos os empenhos concentrados em um único mês. Todas essas situações são, em regra, normais na gestão pública. Os pontos servem apenas para indicar onde o cidadão pode, se quiser, consultar os documentos oficiais, por exemplo com um pedido pela Lei de Acesso à Informação.</p>
+<p>Fornecedores que são órgãos públicos, previdência, bancos, tributos ou concessionárias de serviço público (energia, água, telefonia) não entram nesses cálculos.</p>
+</section>
+
+<section id="limitacoes"><h2>Limitações</h2>
+<ul>
+<li>Os dados do TCE-SP são publicados com cerca de 1 a 2 meses de atraso; os do Tesouro, a cada dois meses.</li>
+<li>Os dados refletem o que foi declarado pelas prefeituras e podem conter erros de origem, corrigidos depois pelos próprios órgãos.</li>
+<li>O painel não mostra o objeto, a modalidade de licitação nem os documentos de cada compra. Essas informações estão no Portal Nacional de Contratações Públicas (<a href="https://pncp.gov.br" target="_blank" rel="noopener">pncp.gov.br</a>) e nos portais de transparência das prefeituras.</li>
+</ul>
+</section>
+
+<section id="aviso"><h2>Aviso legal</h2>
+<p><b>Nenhum conteúdo deste site constitui acusação, denúncia, imputação de crime ou juízo sobre a legalidade, regularidade ou moralidade de atos de qualquer pessoa, empresa ou órgão público.</b> O site apenas reproduz e organiza informações públicas oficiais, de acesso livre, citando sempre a fonte.</p>
+<p>A menção ao nome de uma empresa ou órgão significa somente que ele consta nos registros oficiais de receitas ou despesas do município. Qualquer conclusão sobre a regularidade de contratações cabe exclusivamente aos órgãos competentes (Tribunal de Contas, Ministério Público, Poder Judiciário e Câmara Municipal).</p>
+</section>
+
+<section id="correcoes"><h2>Correções e direito de resposta</h2>
+<p>Se você representa uma pessoa, empresa ou órgão citado e identificou informação incorreta, ou deseja apresentar esclarecimentos, entre em contato. Toda solicitação será analisada com prioridade. Erros de processamento são corrigidos e esclarecimentos pertinentes podem ser publicados junto à informação.</p>
+<ul>
+<li>Pelo GitHub: <a href="https://github.com/AppSystem-0/olho-publico/issues/new?title=Pedido%20de%20corre%C3%A7%C3%A3o" target="_blank" rel="noopener">abrir pedido de correção</a></li>
+<li>Por e-mail: endereço de contato em breve.</li>
+</ul>
+<p>Erros nos dados de origem devem ser corrigidos também junto ao órgão que os declarou (prefeitura ou TCE-SP). A correção aparece aqui automaticamente na atualização seguinte.</p>
+</section>
+
+<section id="termos"><h2>Termos de uso</h2>
+<ul>
+<li>O uso do site é gratuito. As informações podem ser reproduzidas livremente, desde que citadas a fonte original (TCE-SP e/ou Tesouro Nacional) e o Olho Público, sem alteração do sentido e mantendo o aviso de que os pontos de atenção não indicam irregularidade.</li>
+<li>As informações são fornecidas "no estado em que se encontram", para fins informativos. Apesar dos cuidados de conferência, podem conter erros ou atrasos das fontes ou do processamento.</li>
+<li>Quem usar as informações deste site é responsável pelo uso que fizer delas, inclusive por conclusões, publicações ou acusações feitas com base nelas.</li>
+<li>Estes termos podem ser atualizados a qualquer momento, e a data da última atualização aparece no topo desta página.</li>
+</ul>
+</section>
+
+<section id="privacidade"><h2>Privacidade</h2>
+<ul>
+<li>O site não usa cookies, não exige cadastro e não coleta dados pessoais dos visitantes. O provedor de hospedagem (Cloudflare) pode registrar dados técnicos de acesso para segurança e funcionamento do serviço.</li>
+<li>Em respeito à Lei Geral de Proteção de Dados (Lei nº 13.709/2018), nomes e documentos de pessoas físicas que aparecem como credores nos registros públicos não são exibidos no painel.</li>
+</ul>
+</section>
+</main>
+<footer>Olho Público · projeto independente e apartidário · <a href="./">voltar ao painel</a></footer>
+</body>
+</html>

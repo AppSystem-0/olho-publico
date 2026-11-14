@@ -259,7 +259,7 @@ def resumo_ano(desp, rec, limite):
     total_pago = soma(pago) or 1.0
     top = sorted(forn.items(), key=lambda kv: kv[1]["pago"], reverse=True)[:50]
     top_fornecedores = [{
-        "doc": mascarar(k), "nome": v["nome"], "pago": round(v["pago"], 2),
+        "doc": mascarar(k), "nome": "PESSOA FÍSICA (nome não exibido)" if (k.startswith("PF") or len(k) == 11) else v["nome"], "pago": round(v["pago"], 2),
         "empenhado": round(v["empenhado"], 2), "empenhos": v["n"],
         "participacao": round(100 * v["pago"] / total_pago, 2),
         "pessoa_fisica": k.startswith("PF") or len(k) == 11,
@@ -338,10 +338,10 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
             "tipo": "fracionamento", "gravidade": grav,
             "titulo": f"{n_emp} empenhos abaixo do limite de dispensa somam {brl(total)} em {len(meses)} {'mês' if len(meses) == 1 else 'meses'}",
             "fornecedor": nome, "doc": mascarar(k), "mes": lista_meses if len(meses) <= 3 else f"{len(meses)} meses",
-            "explicacao": (f"Em {lista_meses}, este fornecedor recebeu vários empenhos no mesmo mês, cada um abaixo de "
-                           f"{brl(limite)} (limite de dispensa), mas que somados passaram do limite. Pode ser normal "
-                           "(entregas parceladas de uma ata de registro de preços ou contrato já licitado) ou indicar "
-                           "divisão de compra para evitar licitação. Confira a modalidade de cada empenho."),
+            "explicacao": (f"Dado estatístico: em {lista_meses}, houve vários empenhos para este fornecedor no mesmo mês, "
+                           f"cada um abaixo de {brl(limite)}, que somados passam desse valor. Isso é comum em entregas "
+                           "parceladas de contratos e atas de registro de preços. A modalidade de cada compra pode ser "
+                           "consultada no PNCP ou solicitada à prefeitura."),
             "empenhos": sorted({i["empenho"] for _, it in meses for i in it})[:25],
             "valor": round(total, 2),
         })
@@ -356,8 +356,9 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
                 "tipo": "concentracao", "gravidade": "alta" if part >= 10 else "media",
                 "titulo": f"{f['nome']} recebeu {str(round(part, 1)).replace('.', ',')}% do que foi pago a empresas privadas",
                 "fornecedor": f["nome"], "doc": mascarar(k), "valor": round(f["pago"], 2),
-                "explicacao": ("Concentração alta não é irregular por si só (hospitais conveniados, energia, merenda e transporte "
-                               "costumam liderar), mas vale conferir o contrato, a licitação de origem e os aditivos."),
+                "explicacao": ("Dado estatístico: participação deste fornecedor no total pago a empresas privadas no ano. "
+                               "É comum que serviços contínuos (saúde conveniada, alimentação, transporte, limpeza) "
+                               "concentrem os maiores valores. Os contratos podem ser consultados no PNCP ou solicitados à prefeitura."),
             })
 
     # 3) Anulações altas.
@@ -367,7 +368,8 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
                 "tipo": "anulacoes", "gravidade": "baixa",
                 "titulo": f"{round(100 * f['anulado'] / f['empenhado'])}% do valor empenhado para {f['nome']} foi anulado",
                 "fornecedor": f["nome"], "doc": mascarar(k), "valor": round(f["anulado"], 2),
-                "explicacao": "Anulações frequentes podem indicar planejamento ruim ou empenhos que reservam dinheiro sem uso real.",
+                "explicacao": ("Dado estatístico: parte do valor reservado (empenhado) para este fornecedor foi cancelada depois. "
+                               "Anulações são procedimentos contábeis normais, usadas para ajustar valores e quantidades."),
             })
 
     # 4) Pico de fim de ano.
@@ -379,7 +381,8 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
                 "tipo": "pico_dezembro", "gravidade": "media",
                 "titulo": f"Empenhos de dezembro foram {str(round(por_mes[11]['empenhado'] / media, 1)).replace('.', ',')}x a média do ano",
                 "valor": por_mes[11]["empenhado"],
-                "explicacao": "Gasto concentrado no fim do ano pode indicar pressa para usar o orçamento. Vale ver o que foi comprado.",
+                "explicacao": ("Dado estatístico: o valor empenhado em dezembro ficou acima da média dos outros meses. "
+                               "É comum haver concentração de empenhos no fim do exercício."),
             })
 
     # 5) Fornecedor privado que só aparece em um mês, com valor alto.
@@ -396,7 +399,8 @@ def gerar_alertas(desp, forn, por_mes, limite, total_pago):
                 "titulo": f"{forn[k]['nome']} aparece em um único mês com {brl(valor_forn[k])}",
                 "fornecedor": forn[k]["nome"], "doc": mascarar(k), "valor": round(valor_forn[k], 2),
                 "mes": MESES[next(iter(ms)) - 1],
-                "explicacao": "Contratação pontual de valor alto. Confira na Receita Federal a data de abertura e a atividade da empresa.",
+                "explicacao": ("Dado estatístico: todos os empenhos deste fornecedor no ano ocorreram em um único mês. "
+                               "É comum em compras únicas, como equipamentos, obras e eventos."),
             })
 
     alertas = [a for a in alertas if a["tipo"] not in DESATIVADOS]
